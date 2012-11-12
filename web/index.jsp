@@ -1,14 +1,13 @@
-<%@ page import="Sample.HelloWorld" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
-  <head>
-    <title>Sample</title>
-    <link rel="stylesheet" type="text/css" href="styles/style.css" />
-  </head>
-  <body>
-    <h1>Bro</h1>
-    <h3 class="message">
-        <%=HelloWorld.getMessage()%>
-    </h3>
-  </body>
+    <head>
+        <title>Intro to Databases</title>
+    </head>
+    <body>
+        <h1>Intro to Databases</h1>
+        <div>
+            <p>Awesome.</p>
+        </div>
+    </body>
 </html>

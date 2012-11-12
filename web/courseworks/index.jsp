@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!-- import for JDBC -->
 <%@ page import="java.sql.*"%>
 <%@ page import="oracle.jdbc.pool.OracleDataSource"%>
 
@@ -10,7 +9,7 @@
     ResultSet rset = null;
     String error_msg = "";
     String username = "adq2101";
-    String password = "passwordhere";
+    String password = "sqlserverftw";
     String oracle_url = "jdbc:oracle:thin:" + username + "/" + password + "@//w4111b.cs.columbia.edu:1521/ADB";
     String query = "select uni, name from Professors";
     try {
@@ -27,6 +26,8 @@
 <html>
 <head>
     <title>Employee Table JSP Sample</title>
+    <!-- styles -->
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.servletPath}/styles/courseworks.css" />
 </head>
 <body>
     <h2>Employee Table</h2>
@@ -61,4 +62,6 @@
         %>
     </table>
 </body>
+<!-- scripts -->
+<script type="text/javascript" src="${pageContext.request.servletPath}/scripts/courseworks.js"></script>
 </html>
