@@ -6,20 +6,45 @@ import java.sql.*;
 
 public class SqlHelper implements ISqlHelper {
 
-    public Connection getConnection(String connString) throws SQLException {
+    private String _connString;
+
+    public SqlHelper() {
+        String username = "adq2101";
+        String password = "sqlserverftw";
+        String dbServer = "w4111b.cs.columbia.edu:1521/ADB";
+        _connString = "jdbc:oracle:thin:" + username + "/" + password + "@//" + dbServer;
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
         OracleDataSource ods = new OracleDataSource();
-        ods.setURL(connString);
+        ods.setURL(_connString);
         return ods.getConnection();
     }
 
-    public ResultSet executeQuery(String connString, String query) throws SQLException {
-        Connection conn = getConnection(connString);
-        return executeQuery(conn, query);
-    }
-
+    @Override
     public ResultSet executeQuery(Connection conn, String query) throws SQLException {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(query);
     }
+
+    @Override
+    public void tryClose(ResultSet rset, Connection conn) {
+        if (rset != null) {
+            try {
+                rset.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 }

@@ -8,10 +8,8 @@
     Connection conn = null;
     ResultSet rset = null;
     String error_msg = "";
-    String username = "adq2101";
-    String password = "sqlserverftw";
-    String oracle_url = "jdbc:oracle:thin:" + username + "/" + password + "@//w4111b.cs.columbia.edu:1521/ADB";
-    String query = "select uni, name from Professors";
+    String oracle_url = "jdbc:oracle:thin:adq2101/sqlserverftw@//w4111b.cs.columbia.edu:1521/ADB";
+    String query = "select uni, course_id from Enrollment";
     try {
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(oracle_url);
@@ -46,7 +44,7 @@
                     while (rset.next()) {
                         out.print("<tr>");
                         out.print("<td>" + rset.getString("uni") + "</td>" +
-                                  "<td>" + rset.getString("name") + "</td>");
+                                  "<td>" + rset.getString("course_id") + "</td>");
                         out.print("</tr>");
                     }
                 } catch (SQLException e) {
@@ -57,7 +55,11 @@
             }
 
             if (conn != null) {
-                conn.close();
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         %>
     </table>

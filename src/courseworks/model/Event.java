@@ -1,10 +1,9 @@
 package courseworks.model;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Event {
+
     public int event_id;
     public String title;
     public Date start;
@@ -12,7 +11,13 @@ public class Event {
     public String description;
     public String location;
 
-    public List<Message> messages;
-    public Map<String, Document> docs_by_path;
+    public List<Message> getMessages() {
+        return new ArrayList<Message>();
+    }
+
+    public Map<String, Document> getDocumentsByPath() {
+        return new HashMap<String, Document>();
+    }
+
 }
 

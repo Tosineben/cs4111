@@ -5,10 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public interface ISqlHelper {
-    Connection getConnection(String connString) throws SQLException;
 
-    ResultSet executeQuery(String connString, String query) throws SQLException;
+    Connection getConnection() throws SQLException;
+
     ResultSet executeQuery(Connection conn, String query) throws SQLException;
 
+    void tryClose(ResultSet rset, Connection conn);
 
 }
