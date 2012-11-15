@@ -10,22 +10,22 @@ public interface ICourseworksWriter {
     // returns true on success, false on failure
     boolean createStudent(Student student);
 
-    // returns new event_id
+    // returns new event_id, 0 on failure
     int createEvent(int calendar_id, Event event);
 
-    // returns new calendar_id
+    // returns new calendar_id, 0 on failure
     int createCalendar(int course_id, Calendar cal);
 
-    // returns new anncmnt_id
+    // returns new anncmnt_id, 0 on failure
     int createAnnouncement(int course_id, Announcement anncmnt);
 
-    // returns new document_id
+    // returns new document_id, 0 on failure
     int createDocument(int event_id, Document doc);
 
-    // returns new message_id
+    // returns new message_id, 0 on failure
     int createMessage(int event_id, Message msg);
 
-    // returns new course_id
+    // returns new course_id, 0 on failure
     int createCourse(String prof_uni, Course course);
 
     // returns true on success, false on failure

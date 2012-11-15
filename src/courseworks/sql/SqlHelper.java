@@ -46,6 +46,9 @@ public class SqlHelper implements ISqlHelper {
         }
     }
 
-
+    @Override
+    public Timestamp getCurrentTime() {
+        return new java.sql.Timestamp(new java.util.Date().getTime());
+    }
 
 }
