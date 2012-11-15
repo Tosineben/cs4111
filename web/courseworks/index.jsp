@@ -1,34 +1,31 @@
+<%@ page import="courseworks.sql.*" %>
+<%@ page import="courseworks.model.*" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%@ page import="java.sql.*"%>
-<%@ page import="oracle.jdbc.pool.OracleDataSource"%>
-
-<!-- database lookup -->
 <%
-    Connection conn = null;
-    ResultSet rset = null;
-    String error_msg = "";
-    String oracle_url = "jdbc:oracle:thin:adq2101/sqlserverftw@//w4111b.cs.columbia.edu:1521/ADB";
-    String query = "select uni, course_id from Enrollment";
-    try {
-        OracleDataSource ods = new OracleDataSource();
-        ods.setURL(oracle_url);
-        conn = ods.getConnection();
-        Statement stmt = conn.createStatement();
-        rset = stmt.executeQuery(query);
-    } catch (SQLException e) {
-        error_msg = e.getMessage();
+    Student current_student = null;
+    String student_uni = request.getParameter("student_uni");
+
+    ICourseworksReader repo = new CourseworksReader();
+    List<Student> students = repo.getStudents();
+
+    if (student_uni != null) {
+        for (Student student : students) {
+            if (student.uni.equalsIgnoreCase(student_uni)) {
+                current_student = student;
+            }
+        }
     }
 %>
 
 <html>
 <head>
-    <title>Employee Table JSP Sample</title>
-    <!-- styles -->
-    <link type="text/css" rel="stylesheet" href="${pageContext.request.servletPath}/styles/courseworks.css" />
+    <title>Home Page</title>
 </head>
 <body>
-    <h2>Employee Table</h2>
+
+    <h1>All Students (debug table)</h1>
     <table>
         <tr>
             <td>UNI</td>
@@ -39,31 +36,62 @@
             <td><b>----------</b></td>
         </tr>
         <%
-            if (rset != null) {
-                try {
-                    while (rset.next()) {
-                        out.print("<tr>");
-                        out.print("<td>" + rset.getString("uni") + "</td>" +
-                                  "<td>" + rset.getString("course_id") + "</td>");
-                        out.print("</tr>");
-                    }
-                } catch (SQLException e) {
-                    out.print(e.getMessage());
-                }
-            } else {
-                out.print(error_msg);
-            }
-
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+            for(Student student : students) {
+                out.print("<tr>");
+                out.print("<td>" + student.uni + "</td>" +
+                        "<td>" + student.name + "</td>");
+                out.print("</tr>");
             }
         %>
     </table>
+
+    <%
+    if (current_student == null) {
+    %>
+        <h1>Choose a student</h1>
+
+        <div>
+            <ul>
+                <%
+                for (Student student : students) {
+                %>
+                    <li>
+                        <a href="index.jsp?student_uni=<%=student.uni%>"><%=student.name%></a>
+                    </li>
+                <%
+                }
+                %>
+            </ul>
+        </div>
+
+    <%
+    } else {
+    %>
+
+        <h1>Courses for <%=current_student.name%></h1>
+
+        <table>
+            <tr>
+                <td>COURSE ID</td>
+                <td>COURSE NUMBER</td>
+            </tr>
+            <tr>
+                <td><b>----------</b></td>
+                <td><b>----------</b></td>
+            </tr>
+            <%
+                for(Course course : current_student.getCourses()) {
+                    out.print("<tr>");
+                    out.print("<td>" + course.course_id + "</td>" +
+                            "<td>" + course.course_number + "</td>");
+                    out.print("</tr>");
+                }
+            %>
+        </table>
+
+    <%
+    }
+    %>
+
 </body>
-<!-- scripts -->
-<script type="text/javascript" src="${pageContext.request.servletPath}/scripts/courseworks.js"></script>
 </html>

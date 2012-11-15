@@ -1,6 +1,7 @@
 package courseworks.model;
 
-import java.util.ArrayList;
+import courseworks.sql.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +12,13 @@ public class Announcement {
     public Date time_posted;
 
     public List<ReadAnnouncment> getStudentsRead() {
-        return new ArrayList<ReadAnnouncment>();
+        ICourseworksReader rdr = new CourseworksReader();
+        return rdr.getStudentsReadForAnnouncment(anncmnt_id);
     }
 
-    public class ReadAnnouncment {
-        public Student student;
-        public Date time_read;
+    public boolean updateAnncmntRead(String student_uni, boolean hasRead) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.updateAnncmntRead(anncmnt_id, student_uni, hasRead);
     }
+
 }

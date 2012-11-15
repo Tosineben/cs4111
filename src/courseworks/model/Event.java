@@ -1,5 +1,7 @@
 package courseworks.model;
 
+import courseworks.sql.*;
+
 import java.util.*;
 
 public class Event {
@@ -12,11 +14,23 @@ public class Event {
     public String location;
 
     public List<Message> getMessages() {
-        return new ArrayList<Message>();
+        ICourseworksReader rdr = new CourseworksReader();
+        return rdr.getMessagesForEvent(event_id);
     }
 
     public Map<String, Document> getDocumentsByPath() {
-        return new HashMap<String, Document>();
+        ICourseworksReader rdr = new CourseworksReader();
+        return rdr.getDocumentsForEvent(event_id);
+    }
+
+    public int addMessage(Message msg) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.createMessage(event_id, msg);
+    }
+
+    public int addDocument(Document doc) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.createDocument(event_id, doc);
     }
 
 }

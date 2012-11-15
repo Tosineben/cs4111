@@ -1,6 +1,6 @@
 package courseworks.sql;
 
-public final class WriteQueries {
+public final class WriterQueries {
 
     public static final String INSERT_PROFESSOR =
             "insert into Professors (uni, name) " +

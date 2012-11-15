@@ -1,6 +1,8 @@
 package courseworks.sql;
 
 import courseworks.model.*;
+import courseworks.model.Calendar;
+
 import java.sql.*;
 import java.util.*;
 
@@ -20,7 +22,7 @@ public class CourseworksReader implements ICourseworksReader {
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, ReadQueries.GET_PROFESSORS);
+            rset = _helper.executeQuery(conn, ReaderQueries.GET_PROFESSORS);
 
             while (rset.next()) {
                 Professor prof = new Professor();
@@ -47,14 +49,30 @@ public class CourseworksReader implements ICourseworksReader {
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, ReadQueries.GET_STUDENTS);
+            rset = _helper.executeQuery(conn, ReaderQueries.GET_STUDENTS);
+            students = parseStudents(rset);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
 
-            while (rset.next()) {
-                Student student = new Student();
-                student.uni = rset.getString("uni");
-                student.name = rset.getString("name");
-                students.add(student);
-            }
+        return students;
+    }
+
+    @Override
+    public List<Student> getStudentsForCourse(int course_id) {
+        List<Student> students = new ArrayList<Student>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_STUDENTS_FOR_COURSE);
+            rset = stmt.executeQuery();
+            students = parseStudents(rset);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -74,7 +92,7 @@ public class CourseworksReader implements ICourseworksReader {
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, ReadQueries.GET_COURSES);
+            rset = _helper.executeQuery(conn, ReaderQueries.GET_COURSES);
             courses = parseCourses(rset);
         }
         catch (SQLException e) {
@@ -95,7 +113,7 @@ public class CourseworksReader implements ICourseworksReader {
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, ReadQueries.GET_COURSES_FOR_PROF);
+            rset = _helper.executeQuery(conn, ReaderQueries.GET_COURSES_FOR_PROF);
             courses = parseCourses(rset);
         }
         catch (SQLException e) {
@@ -116,7 +134,7 @@ public class CourseworksReader implements ICourseworksReader {
 
         try {
             conn = _helper.getConnection();
-            CallableStatement stmt = conn.prepareCall(ReadQueries.GET_COURSES_FOR_STUDENT);
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_COURSES_FOR_STUDENT);
             stmt.setString("uni", uni);
             rset = stmt.executeQuery();
             courses = parseCourses(rset);
@@ -129,6 +147,36 @@ public class CourseworksReader implements ICourseworksReader {
         }
 
         return courses;
+    }
+
+    @Override
+    public List<Event> getEventsForCalendar(int calendar_id) {
+        return null;
+    }
+
+    @Override
+    public List<Announcement> getAnnouncementsForCourse(int course_id) {
+        return null;
+    }
+
+    @Override
+    public List<ReadAnnouncment> getStudentsReadForAnnouncment(int anncmnt_id) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Calendar> getCalendarsForCourse(int course_id) {
+        return null;
+    }
+
+    @Override
+    public List<Message> getMessagesForEvent(int event_id) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Document> getDocumentsForEvent(int event_id) {
+        return null;
     }
 
     private List<Course> parseCourses(ResultSet rset) throws SQLException {
@@ -148,4 +196,14 @@ public class CourseworksReader implements ICourseworksReader {
         return courses;
     }
 
+    private List<Student> parseStudents(ResultSet rset) throws SQLException {
+        List<Student> students = new ArrayList<Student>();
+        while (rset.next()) {
+            Student student = new Student();
+            student.uni = rset.getString("uni");
+            student.name = rset.getString("name");
+            students.add(student);
+        }
+        return students;
+    }
 }

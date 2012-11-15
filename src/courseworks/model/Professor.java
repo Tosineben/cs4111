@@ -1,6 +1,7 @@
 package courseworks.model;
 
-import java.util.ArrayList;
+import courseworks.sql.*;
+
 import java.util.List;
 
 public class Professor {
@@ -9,7 +10,13 @@ public class Professor {
     public String name;
 
     public List<Course> getCourses() {
-        return new ArrayList<Course>();
+        ICourseworksReader rdr = new CourseworksReader();
+        return rdr.getCoursesForProfessor(uni);
+    }
+
+    public int addCourse(Course course) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.createCourse(uni, course);
     }
 
 }

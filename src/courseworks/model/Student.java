@@ -14,5 +14,9 @@ public class Student {
         return repo.getCoursesForStudent(uni);
     }
 
+    public boolean enrollInCourse(int course_id) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.enrollStudentInCourse(uni, course_id);
+    }
 }
 

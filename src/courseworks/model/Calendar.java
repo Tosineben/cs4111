@@ -1,6 +1,7 @@
 package courseworks.model;
 
-import java.util.ArrayList;
+import courseworks.sql.*;
+
 import java.util.List;
 
 public class Calendar {
@@ -9,8 +10,13 @@ public class Calendar {
     public String name;
 
     public List<Event> getEvents() {
-        return new ArrayList<Event>();
+        ICourseworksReader rdr = new CourseworksReader();
+        return rdr.getEventsForCalendar(calendar_id);
     }
 
+    public int addEvent(Event event) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.createEvent(calendar_id, event);
+    }
 }
 
