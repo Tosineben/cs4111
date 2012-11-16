@@ -73,17 +73,17 @@ public class CourseworksWriter implements ICourseworksWriter {
             rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_EVENT_ID);
 
             while (rset.next()) {
-                newEventId = rset.getInt(0) + 1;
+                newEventId = rset.getInt(1) + 1;
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_EVENT);
             stmt.setInt("event_id", newEventId);
             stmt.setInt("calendar_id", calendar_id);
             stmt.setString("title", event.title);
+            stmt.setTimestamp("startTime", new Timestamp(event.start.getTime()));
+            stmt.setTimestamp("endTime", new Timestamp(event.end.getTime()));
             stmt.setString("description", event.description);
             stmt.setString("location", event.location);
-            stmt.setDate("startTime", new java.sql.Date(event.start.getTime()));
-            stmt.setDate("endTime", new java.sql.Date(event.end.getTime()));
             stmt.executeUpdate();
         }
         catch (SQLException e) {
@@ -113,7 +113,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_CALENDAR_ID);
 
             while (rset.next()) {
-                newCalendarId = rset.getInt(0) + 1;
+                newCalendarId = rset.getInt(1) + 1;
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_CALENDAR);
@@ -149,7 +149,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_ANNCMNT_ID);
 
             while (rset.next()) {
-                newAnncmntId = rset.getInt(0) + 1;
+                newAnncmntId = rset.getInt(1) + 1;
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_ANNCMNT);
@@ -181,13 +181,14 @@ public class CourseworksWriter implements ICourseworksWriter {
             rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_DOCUMENT_ID);
 
             while (rset.next()) {
-                newDocId = rset.getInt(0) + 1;
+                newDocId = rset.getInt(1) + 1;
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_DOCUMENT);
             stmt.setInt("document_id", newDocId);
-            stmt.setInt("event_id", event_id);
             stmt.setString("file_path", doc.file_path);
+            stmt.setInt("event_id", event_id);
+
             stmt.executeUpdate();
         }
         catch (SQLException e) {
@@ -218,14 +219,14 @@ public class CourseworksWriter implements ICourseworksWriter {
             rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_MESSAGE_ID);
 
             while (rset.next()) {
-                newMessageId = rset.getInt(0) + 1;
+                newMessageId = rset.getInt(1) + 1;
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_MESSAGE);
             stmt.setInt("message_id", newMessageId);
+            stmt.setString("uni", msg.author.uni);
             stmt.setInt("event_id", event_id);
             stmt.setString("message", msg.message);
-            stmt.setString("uni", msg.author.uni);
             stmt.setTimestamp("time_posted", _helper.getCurrentTime());
             stmt.executeUpdate();
         }
@@ -251,15 +252,15 @@ public class CourseworksWriter implements ICourseworksWriter {
             rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_COURSE_ID);
 
             while (rset.next()) {
-                newCourseId = rset.getInt(0) + 1;
+                newCourseId = rset.getInt(1) + 1;
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_COURSE);
             stmt.setInt("course_id", newCourseId);
             stmt.setString("uni", prof_uni);
             stmt.setString("courseNumber", course.course_number);
-            stmt.setString("location", course.location);
             stmt.setString("name", course.name);
+            stmt.setString("location", course.location);
             stmt.setString("description", course.description);
             stmt.executeUpdate();
         }
@@ -282,8 +283,8 @@ public class CourseworksWriter implements ICourseworksWriter {
             conn = _helper.getConnection();
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_ENROLLMENT);
-            stmt.setInt("course_id", course_id);
             stmt.setString("uni", uni);
+            stmt.setInt("course_id", course_id);
             stmt.executeUpdate();
         }
         catch (SQLException e) {
@@ -298,7 +299,7 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
-    public boolean updateAnncmntRead(int anncmnt_id, String student_uni, boolean hasRead) {
+    public boolean updateAnncmntRead(int anncmnt_id, String uni, boolean hasRead) {
         Connection conn = null;
 
         // check to make sure student enrolled in course
@@ -314,15 +315,19 @@ public class CourseworksWriter implements ICourseworksWriter {
 
             if (hasRead) {
                 stmt = conn.prepareCall(WriterQueries.INSERT_READ_ANNCMNT);
-                stmt.setTimestamp("time_read", _helper.getCurrentTime());
             }
             else {
                 stmt = conn.prepareCall(WriterQueries.DELETE_READ_ANNCMNT);
             }
 
             stmt.setInt("anncmnt_id", anncmnt_id);
-            stmt.setString("uni", student_uni);
-            stmt.executeUpdate();
+            stmt.setString("uni", uni);
+
+            if (hasRead) {
+                stmt.setTimestamp("time_read", _helper.getCurrentTime());
+            }
+
+            return stmt.executeUpdate() > 0;
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -331,7 +336,5 @@ public class CourseworksWriter implements ICourseworksWriter {
         finally {
             _helper.tryClose(null, conn);
         }
-
-        return true;
     }
 }

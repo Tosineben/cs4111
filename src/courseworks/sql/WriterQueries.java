@@ -4,11 +4,11 @@ public final class WriterQueries {
 
     public static final String INSERT_PROFESSOR =
             "insert into Professors (uni, name) " +
-            "values :uni, :name";
+            "values (:uni, :name)";
 
     public static final String INSERT_STUDENT =
             "insert into Students (uni, name) " +
-            "values :uni, :name";
+            "values (:uni, :name)";
 
     public static final String INSERT_EVENT =
             "insert into Events (event_id, calendar_id, title, startTime, endTime, description, location) " +
@@ -39,13 +39,13 @@ public final class WriterQueries {
             "values (:uni, :course_id)";
 
     public static final String INSERT_READ_ANNCMNT =
-            "insert into ReadAnnouncement (uni, anncmnt_id, time_read) " +
-            "values (:uni, :anncmnt_id, :time_read)";
+            "insert into ReadAnnouncement (anncmnt_id, uni, time_read) " +
+            "values (:anncmnt_id, :uni, :time_read)";
 
     public static final String DELETE_READ_ANNCMNT =
-            "delete from ReadAnnouncement" +
+            "delete from ReadAnnouncement " +
             "where anncmnt_id = :anncmnt_id " +
-              "and uni = :uni (uni, course_id)";
+              "and uni = :uni";
 
 
     public static final class IdIncrement {
@@ -72,6 +72,6 @@ public final class WriterQueries {
 
         public static final String GET_MAX_MESSAGE_ID =
                 "select max(m.message_id) " +
-                "from Message m";
+                "from Messages m";
     }
 }
