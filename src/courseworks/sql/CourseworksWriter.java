@@ -59,22 +59,17 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public int createEvent(int calendar_id, Event event) {
         Connection conn = null;
-        ResultSet rset = null;
         int newEventId = 0;
-
-        // check to make sure prof teaches course
-        // SELECT C.uni
-        // FROM Calendars Cal
-        // INNER JOIN Courses C ON C.course_id = Cal.course_id
-        // WHERE Cal.calendar_id = @calendar_id
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_EVENT_ID);
 
-            while (rset.next()) {
-                newEventId = rset.getInt(1) + 1;
-            }
+            // TODO data validation
+            // if (_helper.executeScalar(conn, WriterQueries.Validation.VALIDATE_EVENT, calendar_id, logged_in_prof_uni) == 0) {
+            //     throw new SecurityException(String.format("professor %s does not have permission to create event for calendar %d", logged_in_prof_uni, calendar_id));
+            // }
+
+            newEventId = _helper.executeScalar(conn, WriterQueries.IdIncrement.GET_MAX_EVENT_ID) + 1;
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_EVENT);
             stmt.setInt("event_id", newEventId);
@@ -91,7 +86,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             return 0;
         }
         finally {
-            _helper.tryClose(rset, conn);
+            _helper.tryClose(null, conn);
         }
 
         return newEventId;
@@ -100,21 +95,16 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public int createCalendar(int course_id, Calendar cal) {
         Connection conn = null;
-        ResultSet rset = null;
         int newCalendarId = 0;
 
-        // check to make sure professor teaches course
+        // TODO check to make sure professor teaches course
         // SELECT C.uni
         // FROM Courses C
         // WHERE C.course_id = @course_id
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_CALENDAR_ID);
-
-            while (rset.next()) {
-                newCalendarId = rset.getInt(1) + 1;
-            }
+            newCalendarId = _helper.executeScalar(conn, WriterQueries.IdIncrement.GET_MAX_CALENDAR_ID) + 1;
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_CALENDAR);
             stmt.setInt("calendar_id", newCalendarId);
@@ -127,7 +117,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             return 0;
         }
         finally {
-            _helper.tryClose(rset, conn);
+            _helper.tryClose(null, conn);
         }
 
         return newCalendarId;
@@ -136,21 +126,16 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public int createAnnouncement(int course_id, Announcement anncmnt) {
         Connection conn = null;
-        ResultSet rset = null;
         int newAnncmntId = 0;
 
-        // check to make sure prof teaches course
+        // TODO check to make sure prof teaches course
         // SELECT C.uni
         // FROM Courses C
         // WHERE C.course_id = @course_id
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_ANNCMNT_ID);
-
-            while (rset.next()) {
-                newAnncmntId = rset.getInt(1) + 1;
-            }
+            newAnncmntId = _helper.executeScalar(conn, WriterQueries.IdIncrement.GET_MAX_ANNCMNT_ID) + 1;
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_ANNCMNT);
             stmt.setInt("anncmnt_id", newAnncmntId);
@@ -164,7 +149,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             return 0;
         }
         finally {
-            _helper.tryClose(rset, conn);
+            _helper.tryClose(null, conn);
         }
 
         return newAnncmntId;
@@ -173,16 +158,13 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public int createDocument(int event_id, Document doc) {
         Connection conn = null;
-        ResultSet rset = null;
         int newDocId = 0;
+
+        // TODO check logged in prof owns event
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_DOCUMENT_ID);
-
-            while (rset.next()) {
-                newDocId = rset.getInt(1) + 1;
-            }
+            newDocId = _helper.executeScalar(conn, WriterQueries.IdIncrement.GET_MAX_DOCUMENT_ID) + 1;
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_DOCUMENT);
             stmt.setInt("document_id", newDocId);
@@ -196,7 +178,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             return 0;
         }
         finally {
-            _helper.tryClose(rset, conn);
+            _helper.tryClose(null, conn);
         }
 
         return newDocId;
@@ -205,10 +187,9 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public int createMessage(int event_id, Message msg) {
         Connection conn = null;
-        ResultSet rset = null;
         int newMessageId = 0;
 
-        // check to make sure student is enrolled
+        // TODO check to make sure student is enrolled
         // SELECT E.uni
         // FROM Message M
         // INNER JOIN Events Ev ON Ev.event_id = M.event_id
@@ -216,11 +197,7 @@ public class CourseworksWriter implements ICourseworksWriter {
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_MESSAGE_ID);
-
-            while (rset.next()) {
-                newMessageId = rset.getInt(1) + 1;
-            }
+            newMessageId = _helper.executeScalar(conn, WriterQueries.IdIncrement.GET_MAX_MESSAGE_ID) + 1;
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_MESSAGE);
             stmt.setInt("message_id", newMessageId);
@@ -235,7 +212,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             return 0;
         }
         finally {
-            _helper.tryClose(rset, conn);
+            _helper.tryClose(null, conn);
         }
 
         return newMessageId;
@@ -244,16 +221,11 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public int createCourse(String prof_uni, Course course) {
         Connection conn = null;
-        ResultSet rset = null;
         int newCourseId = 0;
 
         try {
             conn = _helper.getConnection();
-            rset = _helper.executeQuery(conn, WriterQueries.IdIncrement.GET_MAX_COURSE_ID);
-
-            while (rset.next()) {
-                newCourseId = rset.getInt(1) + 1;
-            }
+            newCourseId = _helper.executeScalar(conn, WriterQueries.IdIncrement.GET_MAX_COURSE_ID) + 1;
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_COURSE);
             stmt.setInt("course_id", newCourseId);
@@ -269,7 +241,7 @@ public class CourseworksWriter implements ICourseworksWriter {
             return 0;
         }
         finally {
-            _helper.tryClose(rset, conn);
+            _helper.tryClose(null, conn);
         }
 
         return newCourseId;
@@ -281,7 +253,6 @@ public class CourseworksWriter implements ICourseworksWriter {
 
         try {
             conn = _helper.getConnection();
-
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_ENROLLMENT);
             stmt.setString("uni", uni);
             stmt.setInt("course_id", course_id);
@@ -302,7 +273,7 @@ public class CourseworksWriter implements ICourseworksWriter {
     public boolean updateAnncmntRead(int anncmnt_id, String uni, boolean hasRead) {
         Connection conn = null;
 
-        // check to make sure student enrolled in course
+        // TODO: check to make sure student enrolled in course
         // select e.uni
         // from Enrollment e
         // inner join Announcements a on a.course_id = e.course_id

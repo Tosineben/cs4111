@@ -47,7 +47,6 @@ public final class WriterQueries {
             "where anncmnt_id = :anncmnt_id " +
               "and uni = :uni";
 
-
     public static final class IdIncrement {
 
         public static final String GET_MAX_EVENT_ID =
@@ -73,5 +72,17 @@ public final class WriterQueries {
         public static final String GET_MAX_MESSAGE_ID =
                 "select max(m.message_id) " +
                 "from Messages m";
+    }
+
+    public static final class Validation {
+
+        public static final String VALIDATE_EVENT =
+        "select count(c.uni) " +
+        "from Calendars ca " +
+        "inner join Courses c ON c.course_id = ca.course_id " +
+        "where ca.calendar_id = :calendar_id " +
+        "and c.uni = :uni";
+
+
     }
 }

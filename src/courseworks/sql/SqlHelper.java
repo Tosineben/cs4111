@@ -29,6 +29,27 @@ public class SqlHelper implements ISqlHelper {
     }
 
     @Override
+    public int executeScalar(Connection conn, String query, Object... sqlParams) throws SQLException {
+        PreparedStatement stmt = conn.prepareStatement(query);
+
+        for (int i = 0; i < sqlParams.length; i++) {
+            stmt.setObject(i+1, sqlParams[i]);
+        }
+
+        int scalar = 0;
+
+        ResultSet rset = stmt.executeQuery();
+
+        while (rset.next()) {
+            scalar = rset.getInt(1);
+        }
+
+        tryClose(rset, null);
+
+        return scalar;
+    }
+
+    @Override
     public void tryClose(ResultSet rset, Connection conn) {
         if (rset != null) {
             try {
