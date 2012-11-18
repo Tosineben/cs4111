@@ -16,6 +16,8 @@ public class CourseworksWriter implements ICourseworksWriter {
     public boolean createProfessor(Professor prof) {
         Connection conn = null;
 
+        // need to check that the same student UNI doesnt exist
+
         try {
             conn = _helper.getConnection();
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_PROFESSOR);
@@ -37,6 +39,8 @@ public class CourseworksWriter implements ICourseworksWriter {
     @Override
     public boolean createStudent(Student student) {
         Connection conn = null;
+
+        // need to check that the same prof UNI doesnt exist
 
         try {
             conn = _helper.getConnection();

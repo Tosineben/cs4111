@@ -1,18 +1,27 @@
 <%@ page import="courseworks.model.*" %>
+<%@ page import="courseworks.sql.ICourseworksReader" %>
+<%@ page import="courseworks.sql.CourseworksReader" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    String student_uni = request.getParameter("student_uni");
-    String prof_uni = request.getParameter("prof_uni");
+    String uni = request.getParameter("prof_uni");
 
-    // if no student or professor, redirect to homepage
-    if (student_uni == null && prof_uni == null) {
-        response.sendRedirect("/courseworks/index.jsp");
+    Professor current_prof = null;
+
+    ICourseworksReader repo = new CourseworksReader();
+
+    if (uni != null) {
+        for (Professor prof : repo.getProfessors()) {
+            if (prof.uni.equalsIgnoreCase(uni)) {
+                current_prof = prof;
+            }
+        }
     }
 
-
-
-
+    // if no professor, redirect to homepage
+    if (current_prof == null) {
+        response.sendRedirect("/courseworks/index.jsp");
+    }
 %>
 
 

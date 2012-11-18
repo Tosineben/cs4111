@@ -1,6 +1,5 @@
 <%@ page import="courseworks.sql.*" %>
 <%@ page import="courseworks.model.*" %>
-<%@ page import="courseworks.model.comperators.*" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
@@ -36,8 +35,6 @@
         }
     }
 
-    Collections.sort((List<Announcement>) announcements, new AnnouncementComperator());
-    Collections.sort((List<Event>) events, new EventComperator());
 
 
 
