@@ -4,94 +4,185 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-    Student current_student = null;
-    String student_uni = request.getParameter("student_uni");
-
     ICourseworksReader repo = new CourseworksReader();
     List<Student> students = repo.getStudents();
+    List<Professor> profs = repo.getProfessors();
 
-    if (student_uni != null) {
-        for (Student student : students) {
-            if (student.uni.equalsIgnoreCase(student_uni)) {
-                current_student = student;
-            }
-        }
+    String unis = "";
+    String objs = "";
+    for (Professor p : profs) {
+        unis += "'" + p.uni + "',";
+        objs += p.uni + ": { name:'" + p.name + "', type: 'Professor' },";
     }
+    for (Student s : students) {
+        unis += "'" + s.uni + "',";
+        objs += s.uni + ": { name:'" + s.name + "', type: 'Student' },";
+    }
+    unis = unis.substring(0, unis.length() - 1);
+    objs = objs.substring(0, objs.length() - 1);
 %>
 
 <html>
 <head>
-    <title>Home Page</title>
+    <title>Courseworks</title>
+    <!-- styles here -->
+    <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap-responsive.min.css" />
+    <style>
+
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #f5f5f5;
+        }
+
+        input {
+            min-height: 30px;
+        }
+
+        .hero-wrapper {
+            width: 540px;
+            margin: 0 auto;
+        }
+
+        #signin-form {
+            padding-top: 30px;
+        }
+
+        button[type="submit"] {
+            padding-left: 10px;
+        }
+
+        ul.typeahead li.active span {
+            color: white;
+        }
+
+    </style>
 </head>
 <body>
-
-    <h1>All Students (debug table)</h1>
-    <table>
-        <tr>
-            <td>UNI</td>
-            <td>NAME</td>
-        </tr>
-        <tr>
-            <td><b>----------</b></td>
-            <td><b>----------</b></td>
-        </tr>
-        <%
-            for(Student student : students) {
-                out.print("<tr>");
-                out.print("<td>" + student.uni + "</td>" +
-                        "<td>" + student.name + "</td>");
-                out.print("</tr>");
-            }
-        %>
-    </table>
-
-    <%
-    if (current_student == null) {
-    %>
-        <h1>Choose a student</h1>
-
-        <div>
-            <ul>
-                <%
-                for (Student student : students) {
-                %>
-                    <li>
-                        <a href="index.jsp?student_uni=<%=student.uni%>"><%=student.name%></a>
-                    </li>
-                <%
-                }
-                %>
-            </ul>
+    <div class="container-fluid">
+        <div class="hero-wrapper">
+            <h1>Courseworks</h1>
+            <h1><small>Manage all of your courses in one place.</small></h1>
+            <div class="row-fluid">
+                <form class="form-horizontal" id="signin-form">
+                    <div class="control-group">
+                        <label class="control-label" for="signin-uni">Sign In:</label>
+                        <div class="controls">
+                            <input class="input-xlarge" id="signin-uni" type="text" placeholder="Enter your Columbia UNI...">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div><strong>New to Courseworks? Sign up Below!</strong></div>
+            <hr>
+            <div class="row-fluid">
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="signup-uni">UNI</label>
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" id="signup-uni" name="uni" placeholder="UNI">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="signup-name">Name</label>
+                        <div class="controls">
+                            <input class="input-xlarge" type="text" name="name" id="signup-name" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="signup-type">Affiliation: </label>
+                        <div class="controls">
+                            <select id="signup-type" name="type">
+                                <option>Professor</option>
+                                <option>Student</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="signup-submit" onclick="return false;" class="btn btn-primary">Sign Up</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-    <%
-    } else {
-    %>
-
-        <h1>Courses for <%=current_student.name%></h1>
-
-        <table>
-            <tr>
-                <td>COURSE ID</td>
-                <td>COURSE NUMBER</td>
-            </tr>
-            <tr>
-                <td><b>----------</b></td>
-                <td><b>----------</b></td>
-            </tr>
-            <%
-                for(Course course : current_student.getCourses()) {
-                    out.print("<tr>");
-                    out.print("<td>" + course.course_id + "</td>" +
-                            "<td>" + course.course_number + "</td>");
-                    out.print("</tr>");
-                }
-            %>
-        </table>
-
-    <%
-    }
-    %>
-
+    </div>
 </body>
+<!-- scripts here -->
+<script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+<script type="text/javascript">
+    (function(){
+
+        $(function(){
+
+            var allDudes = {<%=objs%>};
+            var allUnis = [<%=unis%>];
+
+            $('#signin-uni').typeahead({
+                source: allUnis,
+                items: 12,
+                updater: function(item){
+                    var dude = allDudes[item];
+                    if (dude) {
+                        signin(item, dude.type);
+                    }
+                    return '';
+                },
+                sorter: function(items) {
+                    if (items.length == 0) {
+                        items[0] = 'None';
+                    }
+                    return items;
+                },
+                highlighter: function(item) {
+                    if (item == 'None') {
+                        return '<span><b>No Results</b></span>';
+                    }
+                    var dude = allDudes[item];
+                    return '<span><b>' + item + ' - ' + dude.name + '</b> - ' + dude.type + '</span>';
+                }
+            });
+
+            $('#signup-submit').click(function(){
+                signup($('#signup-uni').val(),
+                       $('#signup-name').val(),
+                       $('#signup-type').val());
+            });
+
+            function signin(uni, type) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/courseworks/signin',
+                    data: {
+                        uni: uni,
+                        type: type
+                    },
+                    success: function(resp){
+                        window.location = resp;
+                    }
+                });
+            }
+
+            function signup(uni, name, type) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/courseworks/signin',
+                    data: {
+                        uni: uni,
+                        name: name,
+                        type: type
+                    },
+                    success: function(resp){
+                        window.location = resp;
+                    },
+                    error: function() {
+                        alert("Oops, something went wrong, sorry!");
+                    }
+                });
+            }
+
+        });
+    })();
+</script>
 </html>
