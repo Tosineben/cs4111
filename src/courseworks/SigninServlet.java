@@ -35,7 +35,7 @@ public class SigninServlet extends HttpServlet {
             succeeded = writer.createProfessor(p);
 
             if (succeeded) {
-                pw.print("/courseworks/courses.jsp?prof_uni=" + req_uni);
+                pw.print("/courseworks/coursepage.jsp?prof_uni=" + req_uni);
                 request.getSession().setAttribute(SessionKeys.logged_in_prof, p);
             }
         }
@@ -65,7 +65,7 @@ public class SigninServlet extends HttpServlet {
         PrintWriter pw = new PrintWriter(response.getOutputStream());
 
         if ("Professor".equals(req_type)) {
-            pw.print("/courseworks/courses.jsp?prof_uni=" + req_uni);
+            pw.print("/courseworks/coursepage.jsp?prof_uni=" + req_uni);
             request.getSession().setAttribute(SessionKeys.logged_in_prof, new Professor(){{name=req_name; uni=req_uni;}});
         }
         else if ("Student".equals(req_type)) {

@@ -28,17 +28,8 @@
     <!-- styles here -->
     <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap-responsive.min.css" />
+    <link type="text/css" rel="stylesheet" href="/styles/courseworks.css" />
     <style>
-
-        body {
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
-        }
-
-        input {
-            min-height: 30px;
-        }
 
         .hero-wrapper {
             width: 540px;

@@ -1,5 +1,6 @@
-package courseworks;
+package courseworks.coursemgmt;
 
+import courseworks.SessionKeys;
 import courseworks.model.Student;
 
 import javax.servlet.ServletException;
@@ -10,20 +11,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "CourseManagementServlet")
-public class CourseManagementServlet extends HttpServlet {
+@WebServlet(name = "StudentServlet")
+public class StudentServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter pw = new PrintWriter(response.getOutputStream());
         boolean success = false;
 
+        // get stuff from session
+        Student student = (Student)request.getSession().getAttribute(SessionKeys.logged_in_student);
+
         // get params
         int course_id = Integer.parseInt(request.getParameter("course_id"));
         String addRemove = request.getParameter("type");
-
-        // get stuff from session
-        Student student = (Student)request.getSession().getAttribute(SessionKeys.logged_in_student);
 
         if (student != null) {
             if ("add".equals(addRemove)) {
@@ -35,7 +36,7 @@ public class CourseManagementServlet extends HttpServlet {
         }
 
         if (success) {
-            pw.write("/courseworks/enroll.jsp");
+            pw.write("/courseworks/coursemgmt/student.jsp");
         }
         else {
             response.sendError(500);

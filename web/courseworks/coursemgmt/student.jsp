@@ -15,7 +15,7 @@
     ICourseworksReader rdr = new CourseworksReader();
 
     List<Course> notEnrolled = new ArrayList<Course>();
-    List<Course> enrolled = rdr.getCoursesForStudent(student.uni);
+    List<Course> enrolled = student.getCourses();
 
     HashSet<Integer> enrollend_course_ids = new HashSet<Integer>();
     for (Course c : enrolled) {
@@ -34,13 +34,8 @@
     <!-- styles here -->
     <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap-responsive.min.css" />
+    <link type="text/css" rel="stylesheet" href="/styles/courseworks.css" />
     <style>
-
-        body {
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
-        }
 
     </style>
 </head>
@@ -69,7 +64,7 @@
                         <td><%=c.name%></td>
                         <td><%=c.professor.name%> (<%=c.professor.uni%>)</td>
                         <td><a href="#model-<%=c.course_id%>" data-toggle="modal">More Info</a></td>
-                        <td><a href="#" onclick="return false;" class="remove-course" data-course="<%=c.course_id%>">Un-enroll!</a></td>
+                        <td><a href="#" onclick="return false;" class="remove-course" data-course="<%=c.course_id%>">Un-enroll</a></td>
                     </tr>
 
                     <div class="modal hide fade" id="model-<%=c.course_id%>">
@@ -111,7 +106,7 @@
                         <td><%=c.name%></td>
                         <td><%=c.professor.name%> (<%=c.professor.uni%>)</td>
                         <td><a href="#model-<%=c.course_id%>" data-toggle="modal">More Info</a></td>
-                        <td><a href="#" onclick="return false;" class="add-course" data-course="<%=c.course_id%>">Enroll!</a></td>
+                        <td><a href="#" onclick="return false;" class="add-course" data-course="<%=c.course_id%>">Enroll</a></td>
                     </tr>
 
                     <div class="modal hide fade" id="model-<%=c.course_id%>">
@@ -143,20 +138,20 @@
 
             $('.add-course').click(function(){
                 var course_id = $(this).data('course');
-                addCourse(course_id);
+                enrollInCourse(course_id);
             });
 
             $('.remove-course').click(function(){
                 var course_id = $(this).data('course');
-                removeCourse(course_id);
+                unEnrollFromCourse(course_id);
             });
 
         });
 
-        function removeCourse(course_id) {
+        function unEnrollFromCourse(course_id) {
             $.ajax({
                 type: 'POST',
-                url: '/courseworks/coursemanagement',
+                url: '/courseworks/coursemgmt/student',
                 data: {
                     course_id: course_id,
                     type: 'remove'
@@ -170,10 +165,10 @@
             });
         }
 
-        function addCourse(course_id) {
+        function enrollInCourse(course_id) {
             $.ajax({
                 type: 'POST',
-                url: '/courseworks/coursemanagement',
+                url: '/courseworks/coursemgmt/student',
                 data: {
                     course_id: course_id,
                     type: 'add'

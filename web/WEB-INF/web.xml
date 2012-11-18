@@ -13,11 +13,19 @@
         <url-pattern>/courseworks/signin/*</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>CourseManagementServlet</servlet-name>
-        <servlet-class>courseworks.CourseManagementServlet</servlet-class>
+        <servlet-name>StudentCourseMgmt</servlet-name>
+        <servlet-class>courseworks.coursemgmt.StudentServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>CourseManagementServlet</servlet-name>
-        <url-pattern>/courseworks/coursemanagement/*</url-pattern>
+        <servlet-name>StudentCourseMgmt</servlet-name>
+        <url-pattern>/courseworks/coursemgmt/student/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ProfCourseMgmt</servlet-name>
+        <servlet-class>courseworks.coursemgmt.ProfServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfCourseMgmt</servlet-name>
+        <url-pattern>/courseworks/coursemgmt/professor/*</url-pattern>
     </servlet-mapping>
 </web-app>
