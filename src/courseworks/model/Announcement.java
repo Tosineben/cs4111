@@ -10,6 +10,9 @@ public class Announcement {
     public int anncmnt_id;
     public String message;
     public Date time_posted;
+    public String course_number;
+    public String author;
+    public Date time_read;
 
     public List<ReadAnnouncment> getStudentsRead() {
         ICourseworksReader rdr = new CourseworksReader();

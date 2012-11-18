@@ -12,6 +12,8 @@ public class Event {
     public Date end;
     public String description;
     public String location;
+    public String course_number;
+    public int calendar_id;
 
     public List<Message> getMessages() {
         ICourseworksReader rdr = new CourseworksReader();

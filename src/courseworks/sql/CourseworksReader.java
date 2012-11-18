@@ -414,10 +414,12 @@ public class CourseworksReader implements ICourseworksReader {
                 Event event = new Event();
                 event.event_id = rset.getInt("event_id");
                 event.description = rset.getString("description");
-                event.end = rset.getDate("endTime");
+                event.end = rset.getDate("end_time");
                 event.location = rset.getString("location");
-                event.start = rset.getDate("startTime");
+                event.start = rset.getDate("start_time");
                 event.title = rset.getString("title");
+                event.course_number = rset.getString("course_number");
+                event.calendar_id = rset.getInt("calendar_id");
                 events.add(event);
             }
         }
@@ -448,6 +450,9 @@ public class CourseworksReader implements ICourseworksReader {
                 anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
                 anncmnt.message = rset.getString("message");
                 anncmnt.time_posted = rset.getDate("time_posted");
+                anncmnt.course_number = rset.getString("course_number");
+                anncmnt.author = rset.getString("author");
+                anncmnt.time_read = rset.getDate("time_read");
                 anncmnts.add(anncmnt);
             }
         }

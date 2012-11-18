@@ -89,15 +89,19 @@ public final class ReaderQueries {
             "where d.event_id = :event_id";
 
     public static final String GET_EVENTS_FOR_STUDENT =
-            GET_EVENTS +
+            "select ev.title, ev.event_id, ev.startTime as start_time, ev.endTime as end_time, ev.description, " +
+                    "ev.location, c.courseNumber as course_number, cal.calendar_id " +
+            "from Events ev " +
                     "inner join Calendars cal on cal.calendar_id = ev.calendar_id " +
                     "inner join Enrollment e on e.course_id = cal.course_id " +
                     "inner join Courses c on c.course_id = e.course_id " +
             "where e.uni = :student_uni ";
 
+
+    //TODO remove either course_name or course_number from query
     public static final String GET_ANNOUNCEMENTS_FOR_STUDENT =
             "SELECT A.anncmnt_id, A.message, A.time_posted, " +
-                    "P.name AS author, C.name AS course_name, Ra.time_read " +
+                    "P.name AS author, C.name AS course_name, Ra.time_read, C.courseNumber as course_number " +
             "FROM Enrollment E " +
                     "INNER JOIN Announcements A ON A.course_id = E.course_id " +
                     "INNER JOIN Courses C ON C.course_id = E.course_id " +
