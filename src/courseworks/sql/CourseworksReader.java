@@ -279,6 +279,34 @@ public class CourseworksReader implements ICourseworksReader {
         return cals;
     }
 
+    public List<Calendar> getCalendarListForCourse(int course_id) {
+        List<Calendar> cals = new ArrayList<Calendar>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_CALENDARS_FOR_COURSE);
+            stmt.setInt("course_id", course_id);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                Calendar cal = new Calendar();
+                cal.calendar_id = rset.getInt("calendar_id");
+                cal.name = rset.getString("name");
+                cals.add(cal);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return cals;
+    }
+
     @Override
     public List<Message> getMessagesForEvent(int event_id) {
         List<Message> msgs = new ArrayList<Message>();
@@ -368,4 +396,38 @@ public class CourseworksReader implements ICourseworksReader {
         }
         return students;
     }
+
+    public List<Event> getEventsForStudent(String student_uni) {
+        List<Event> events = new ArrayList<Event>();
+            Connection conn = null;
+            ResultSet rset = null;
+
+            try {
+                conn = _helper.getConnection();
+                CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_EVENTS_FOR_STUDENT);
+                stmt.setString("student_uni", student_uni);
+                rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                Event event = new Event();
+                event.event_id = rset.getInt("event_id");
+                event.description = rset.getString("description");
+                event.end = rset.getDate("endTime");
+                event.location = rset.getString("location");
+                event.start = rset.getDate("startTime");
+                event.title = rset.getString("title");
+                events.add(event);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return events;
+    }
+
+
 }

@@ -12,6 +12,8 @@ public class Event {
     public Date end;
     public String description;
     public String location;
+    public List<Message> messages;
+    public Map<String, Document> documents;
 
     public List<Message> getMessages() {
         ICourseworksReader rdr = new CourseworksReader();
@@ -32,6 +34,6 @@ public class Event {
         ICourseworksWriter wtr = new CourseworksWriter();
         return wtr.createDocument(event_id, doc);
     }
-
 }
+
 

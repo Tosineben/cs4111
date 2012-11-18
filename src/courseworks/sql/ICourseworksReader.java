@@ -37,9 +37,14 @@ public interface ICourseworksReader {
     // returns calendars for course by name
     Map<String, Calendar> getCalendarsForCourse(int course_id);
 
+    // returns a list of calendars for course
+    List<Calendar> getCalendarListForCourse(int course_id);
+
     // returns messages for event
     List<Message> getMessagesForEvent(int event_id);
 
     // returns documents for event by file path
     Map<String, Document> getDocumentsForEvent(int event_id);
+
+    List<Event> getEventsForStudent(String student_uni);
 }

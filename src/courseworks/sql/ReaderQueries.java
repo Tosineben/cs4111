@@ -87,4 +87,11 @@ public final class ReaderQueries {
     public static final String GET_DOCUMENTS_FOR_COURSE =
             GET_DOCUMENTS +
             "where d.event_id = :event_id";
+
+    public static final String GET_EVENTS_FOR_STUDENT =
+            GET_EVENTS +
+                    "inner join Calendars cal on cal.calendar_id = ev.calendar_id" +
+                    "inner join Enrollment e on e.course_id = cal.course_id" +
+                    "inner join Courses c on c.course_id = e.course_id" +
+            "where e.uni = :student_uni";
 }
