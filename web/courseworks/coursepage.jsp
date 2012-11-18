@@ -4,22 +4,26 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
+<%@ page import="courseworks.SessionKeys" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
 
-    String student_uni = request.getParameter("student_uni");
+    //Student student = (Student)session.getAttribute(SessionKeys.logged_in_student);
 
-    if (student_uni == null){
+    //TODO remove test code, replace with session
+    Student student = new Student();
+    student.uni = "vs2411";
+
+    if (student == null){
         response.sendRedirect("index.jsp");
     }
     ICourseworksReader rdr = new CourseworksReader();
-    List<Course> courses = rdr.getCoursesForStudent(student_uni);
+    List<Course> courses = rdr.getCoursesForStudent(student.uni);
 
 
-    List<Calendar> calendars = new ArrayList<Calendar>();
-    List<Event> events = rdr.getEventsForStudent(student_uni);
-    List<Announcement> announcements = rdr.getAnnouncementsForStudent(student_uni);
+    List<Event> events = rdr.getEventsForStudent(student.uni);
+    List<Announcement> announcements = rdr.getAnnouncementsForStudent(student.uni);
 
     Collections.sort((List<Announcement>) announcements, new AnnouncementComperator());
     Collections.sort((List<Event>) events, new EventComperator());
