@@ -21,50 +21,56 @@ public class SigninServlet extends HttpServlet {
 
         PrintWriter pw = new PrintWriter(response.getOutputStream());
 
-        String uni = request.getParameter("uni");
-        String type = request.getParameter("type");
-        String name = request.getParameter("name");
+        final String req_uni = request.getParameter("uni");
+        final String req_type = request.getParameter("type");
+        final String req_name = request.getParameter("name");
 
         ICourseworksWriter writer = new CourseworksWriter();
 
-        if ("Professor".equals(type)) {
-            Professor p = new Professor();
-            p.uni = uni;
-            p.name = name;
+        boolean succeeded = false;
 
-            if (writer.createProfessor(p)) {
-                pw.print("/courseworks/courses.jsp?prof_uni=" + uni);
-                pw.close();
-                return;
+        if ("Professor".equals(req_type)) {
+            Professor p = new Professor(){{name=req_name; uni=req_uni;}};
+
+            succeeded = writer.createProfessor(p);
+
+            if (succeeded) {
+                pw.print("/courseworks/courses.jsp?prof_uni=" + req_uni);
+                request.getSession().setAttribute(SessionKeys.logged_in_prof, p);
             }
         }
-        else if ("Student".equals(type)) {
-            Student s = new Student();
-            s.uni = uni;
-            s.name = name;
+        else if ("Student".equals(req_type)) {
+            Student s = new Student(){{name=req_name; uni=req_uni;}};
 
-            if (writer.createStudent(s)) {
-                pw.print("/courseworks/coursepage.jsp?student_uni=" + uni);
-                pw.close();
-                return;
+            succeeded = writer.createStudent(s);
+
+            if (succeeded) {
+                pw.print("/courseworks/coursepage.jsp?student_uni=" + req_uni);
+                request.getSession().setAttribute(SessionKeys.logged_in_student, s);
             }
         }
 
-        // something failed
-        response.sendError(500);
+        if (!succeeded){
+            response.sendError(500);
+        }
+
+        pw.close();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String uni = request.getParameter("uni");
-        String type = request.getParameter("type");
+        final String req_uni = request.getParameter("uni");
+        final String req_name = request.getParameter("name");
+        final String req_type = request.getParameter("type");
 
         PrintWriter pw = new PrintWriter(response.getOutputStream());
 
-        if ("Professor".equals(type)) {
-            pw.print("/courseworks/courses.jsp?prof_uni=" + uni);
+        if ("Professor".equals(req_type)) {
+            pw.print("/courseworks/courses.jsp?prof_uni=" + req_uni);
+            request.getSession().setAttribute(SessionKeys.logged_in_prof, new Professor(){{name=req_name; uni=req_uni;}});
         }
-        else if ("Student".equals(type)) {
-            pw.print("/courseworks/coursepage.jsp?student_uni=" + uni);
+        else if ("Student".equals(req_type)) {
+            pw.print("/courseworks/coursepage.jsp?student_uni=" + req_uni);
+            request.getSession().setAttribute(SessionKeys.logged_in_student, new Student(){{name=req_name; uni=req_uni;}});
         }
         else {
             pw.print("/courseworks/index.jsp");

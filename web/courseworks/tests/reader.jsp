@@ -25,39 +25,39 @@
         for (Student student: students) {
     %>
         <div><%=student.name%> (<%=student.uni%>)</div>
-        <h2>Courses</h2>
-        <table>
-            <tr>
-                <td>course id</td>
-                <td>course num</td>
-                <td>name</td>
-                <td>prof</td>
-                <td>location</td>
-                <td>desc</td>
-            </tr>
-            <tr>
-                <td><b>----------</b></td>
-                <td><b>----------</b></td>
-                <td><b>----------</b></td>
-                <td><b>----------</b></td>
-                <td><b>----------</b></td>
-                <td><b>----------</b></td>
-            </tr>
-            <%
-                for (Course course: rdr.getCoursesForStudent(student.uni)) {
-            %>
-                <tr>
-                    <td><%=course.course_id%></td>
-                    <td><%=course.course_number%></td>
-                    <td><%=course.name%></td>
-                    <td><%=course.professor.name%> (<%=course.professor.uni%>)</td>
-                    <td><%=course.location%></td>
-                    <td><%=course.description.substring(0, 10)%></td>
-                </tr>
-            <%
-                }
-            %>
-        </table>
+    <h2>Courses</h2>
+    <table>
+        <tr>
+            <td>course id</td>
+            <td>course num</td>
+            <td>name</td>
+            <td>prof</td>
+            <td>location</td>
+            <td>desc</td>
+        </tr>
+        <tr>
+            <td><b>----------</b></td>
+            <td><b>----------</b></td>
+            <td><b>----------</b></td>
+            <td><b>----------</b></td>
+            <td><b>----------</b></td>
+            <td><b>----------</b></td>
+        </tr>
+        <%
+            for (Course course: rdr.getCoursesForStudent(student.uni)) {
+        %>
+        <tr>
+            <td><%=course.course_id%></td>
+            <td><%=course.course_number%></td>
+            <td><%=course.name%></td>
+            <td><%=course.professor.name%> (<%=course.professor.uni%>)</td>
+            <td><%=course.location%></td>
+            <td><%=course.description.substring(0, 10)%></td>
+        </tr>
+        <%
+            }
+        %>
+    </table>
     <%
         }
     %>
