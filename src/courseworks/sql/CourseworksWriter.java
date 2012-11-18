@@ -274,6 +274,28 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
+    public boolean unEnrollStudentFromCourse(String uni, int course_id) {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_ENROLLMENT);
+            stmt.setString("uni", uni);
+            stmt.setInt("course_id", course_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean updateAnncmntRead(int anncmnt_id, String uni, boolean hasRead) {
         Connection conn = null;
 

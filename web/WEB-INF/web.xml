@@ -12,4 +12,12 @@
         <servlet-name>SigninServlet</servlet-name>
         <url-pattern>/courseworks/signin/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>CourseManagementServlet</servlet-name>
+        <servlet-class>courseworks.CourseManagementServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CourseManagementServlet</servlet-name>
+        <url-pattern>/courseworks/coursemanagement/*</url-pattern>
+    </servlet-mapping>
 </web-app>

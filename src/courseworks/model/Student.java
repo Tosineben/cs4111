@@ -18,5 +18,10 @@ public class Student {
         ICourseworksWriter wtr = new CourseworksWriter();
         return wtr.enrollStudentInCourse(uni, course_id);
     }
+
+    public boolean unEnrollFromCourse(int course_id) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.unEnrollStudentFromCourse(uni, course_id);
+    }
 }
 

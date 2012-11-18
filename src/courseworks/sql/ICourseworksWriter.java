@@ -31,6 +31,9 @@ public interface ICourseworksWriter {
     // returns true on success, false on failure
     boolean enrollStudentInCourse(String uni, int course_id);
 
+    // returns true on sucess, false on failure
+    boolean unEnrollStudentFromCourse(String uni, int course_id);
+
     // returns true if read status changed, false if unchanged or on failure
     boolean updateAnncmntRead(int anncmnt_id, String student_uni, boolean hasRead);
 

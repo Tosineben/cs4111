@@ -38,6 +38,11 @@ public final class WriterQueries {
             "insert into Enrollment (uni, course_id) " +
             "values (:uni, :course_id)";
 
+    public static final String DELETE_ENROLLMENT =
+            "delete from Enrollment " +
+            "where uni = :uni " +
+            "and course_id = :course_id";
+
     public static final String INSERT_READ_ANNCMNT =
             "insert into ReadAnnouncement (anncmnt_id, uni, time_read) " +
             "values (:anncmnt_id, :uni, :time_read)";
@@ -46,6 +51,7 @@ public final class WriterQueries {
             "delete from ReadAnnouncement " +
             "where anncmnt_id = :anncmnt_id " +
               "and uni = :uni";
+
 
     public static final class IdIncrement {
 
