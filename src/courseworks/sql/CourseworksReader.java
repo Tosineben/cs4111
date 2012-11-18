@@ -406,6 +406,8 @@ public class CourseworksReader implements ICourseworksReader {
                 conn = _helper.getConnection();
                 CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_EVENTS_FOR_STUDENT);
                 stmt.setString("student_uni", student_uni);
+
+                System.out.print(stmt);
                 rset = stmt.executeQuery();
 
             while (rset.next()) {
@@ -427,6 +429,36 @@ public class CourseworksReader implements ICourseworksReader {
         }
 
         return events;
+    }
+
+
+    public List<Announcement> getAnnouncementsForStudent(String student_uni) {
+        List<Announcement> anncmnts = new ArrayList<Announcement>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_ANNOUNCEMENTS_FOR_STUDENT);
+            stmt.setString("student_uni", student_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                Announcement anncmnt = new Announcement();
+                anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
+                anncmnt.message = rset.getString("message");
+                anncmnt.time_posted = rset.getDate("time_posted");
+                anncmnts.add(anncmnt);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return anncmnts;
     }
 
 

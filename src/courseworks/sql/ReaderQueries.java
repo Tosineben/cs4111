@@ -90,8 +90,18 @@ public final class ReaderQueries {
 
     public static final String GET_EVENTS_FOR_STUDENT =
             GET_EVENTS +
-                    "inner join Calendars cal on cal.calendar_id = ev.calendar_id" +
-                    "inner join Enrollment e on e.course_id = cal.course_id" +
-                    "inner join Courses c on c.course_id = e.course_id" +
-            "where e.uni = :student_uni";
+                    "inner join Calendars cal on cal.calendar_id = ev.calendar_id " +
+                    "inner join Enrollment e on e.course_id = cal.course_id " +
+                    "inner join Courses c on c.course_id = e.course_id " +
+            "where e.uni = :student_uni ";
+
+    public static final String GET_ANNOUNCEMENTS_FOR_STUDENT =
+            "SELECT A.anncmnt_id, A.message, A.time_posted, " +
+                    "P.name AS author, C.name AS course_name, Ra.time_read " +
+            "FROM Enrollment E " +
+                    "INNER JOIN Announcements A ON A.course_id = E.course_id " +
+                    "INNER JOIN Courses C ON C.course_id = E.course_id " +
+                    "INNER JOIN Professors P ON P.uni = C.uni " +
+                    "LEFT OUTER JOIN ReadAnnouncement Ra ON (Ra.anncmnt_id = A.anncmnt_id  AND Ra.uni = E.uni) " +
+            "WHERE E.uni = :student_uni ";
 }

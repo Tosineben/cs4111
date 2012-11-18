@@ -18,32 +18,11 @@
 
 
     List<Calendar> calendars = new ArrayList<Calendar>();
-    List<Event> events = new ArrayList<Event>();
-    List<Announcement> announcements = new ArrayList<Announcement>();
-
-    for(Course course : courses){
-        course.calendars = rdr.getCalendarListForCourse(course.course_id);
-        calendars.addAll(course.calendars);
-        course.announcements = rdr.getAnnouncementsForCourse(course.course_id);
-        announcements.addAll(course.announcements);
-        for(Calendar cal : course.calendars){
-            cal.events = rdr.getEventsForCalendar(cal.calendar_id);
-            events.addAll(cal.events);
-            for(Event event : cal.events){
-                event.messages = rdr.getMessagesForEvent(event.event_id);
-                event.documents = rdr.getDocumentsForEvent(event.event_id);
-            }
-        }
-    }
+    List<Event> events = rdr.getEventsForStudent(student_uni);
+    List<Announcement> announcements = rdr.getAnnouncementsForStudent(student_uni);
 
     Collections.sort((List<Announcement>) announcements, new AnnouncementComperator());
     Collections.sort((List<Event>) events, new EventComperator());
-
-
-
-
-
-
 %>
 
 
@@ -73,6 +52,7 @@
     </div>
 
     <div id="Calendar">
+        <h1>Events</h1>
         <% for(Event event : events){%>
             <div id="<%=event.event_id%>">
                 <h2><%=event.title%></h2>

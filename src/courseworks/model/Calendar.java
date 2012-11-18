@@ -8,7 +8,6 @@ public class Calendar {
 
     public int calendar_id;
     public String name;
-    public List<Event> events;
 
     public List<Event> getEvents() {
         ICourseworksReader rdr = new CourseworksReader();

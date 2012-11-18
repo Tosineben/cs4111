@@ -13,8 +13,6 @@ public class Course {
     public String location;
     public String description;
     public Professor professor;
-    public List<Calendar> calendars;
-    public List<Announcement> announcements;
 
     public List<Student> getStudents() {
         ICourseworksReader rdr = new CourseworksReader();

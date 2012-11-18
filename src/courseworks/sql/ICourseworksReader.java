@@ -47,4 +47,6 @@ public interface ICourseworksReader {
     Map<String, Document> getDocumentsForEvent(int event_id);
 
     List<Event> getEventsForStudent(String student_uni);
+
+    List<Announcement> getAnnouncementsForStudent(String student_uni);
 }
