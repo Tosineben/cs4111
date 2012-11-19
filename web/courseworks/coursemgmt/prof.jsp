@@ -27,6 +27,14 @@
     for (Course c : currentCourses) {
         studentsByCourse.put(c.course_id, c.getStudents());
     }
+
+    String deleteDisabled = null;
+    String deleteTitle = null;
+
+    if (currentCourses.size() > 0) {
+        deleteDisabled = "disabled";
+        deleteTitle = "You cannot delete your account because you have active courses.";
+    }
 %>
 
 <html>
@@ -43,6 +51,8 @@
 <body>
     <jsp:include page="../nav.jsp">
         <jsp:param name="courseMgmt" value="active" />
+        <jsp:param name="deleteDisabled" value="<%=deleteDisabled%>" />
+        <jsp:param name="deleteTitle" value="<%=deleteTitle%>" />
     </jsp:include>
     <div class="container-fluid">
         <h1>Course Management</h1>

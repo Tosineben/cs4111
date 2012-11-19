@@ -28,4 +28,12 @@
         <servlet-name>ProfCourseMgmt</servlet-name>
         <url-pattern>/courseworks/coursemgmt/professor/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserServlet</servlet-name>
+        <servlet-class>courseworks.UserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserServlet</servlet-name>
+        <url-pattern>/courseworks/user/*</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -33,7 +33,12 @@
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <p class="navbar-text pull-left"><%=name%></p>
+                    <p class="navbar-text pull-left" id="user-name"><%=name%></p>
+                    <li>
+                        <a href="#modal-nav" data-toggle="modal">
+                            <i class="icon-wrench icon-white"></i>
+                        </a>
+                    </li>
                     <li class="divider-vertical"></li>
                     <li>
                         <a href="#" onclick="return false;" id="signout">Sign Out</a>
@@ -41,5 +46,26 @@
                 </ul>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modal-nav">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3>Edit Account</h3>
+    </div>
+    <div class="modal-body">
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="edit-user-name">Name</label>
+                <div class="controls">
+                    <input type="text" id="edit-user-name" class="input-xlarge" value="<%=name%>" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="edit-user-submit" onclick="return false;">Submit</button>
+                <a class="btn btn-danger ${param.deleteDisabled}" style="margin-left:10px;" rel="tooltip" title="${param.deleteTitle}" id="delete-user" href="#" onclick="return false"><i class="icon-trash icon-white"></i> Delete Account</a>
+            </div>
+        </form>
     </div>
 </div>

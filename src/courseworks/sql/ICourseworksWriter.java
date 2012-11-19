@@ -8,8 +8,12 @@ import courseworks.model.*;
 public interface ICourseworksWriter {
 
     boolean createProfessor(Professor prof);
+    boolean editProfessor(Professor prof);
+    boolean deleteProfessor(String prof_uni);
 
     boolean createStudent(Student student);
+    boolean editStudent(Student student);
+    boolean deleteStudent(String student_uni);
 
     // returns new event_id, 0 on failure
     int createEvent(int calendar_id, Event event, String prof_uni);

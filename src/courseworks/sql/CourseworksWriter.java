@@ -35,6 +35,49 @@ public class CourseworksWriter implements ICourseworksWriter {
         return true;
     }
 
+    @Override
+    public boolean editProfessor(Professor prof) {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_PROFESSOR);
+            stmt.setString("name", prof.name);
+            stmt.setString("uni", prof.uni);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteProfessor(String prof_uni) {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_PROFESSOR);
+            stmt.setString("uni", prof_uni);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
     // TODO: check that the same prof UNI doesnt exist
     @Override
     public boolean createStudent(Student student) {
@@ -45,6 +88,49 @@ public class CourseworksWriter implements ICourseworksWriter {
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_STUDENT);
             stmt.setString("uni", student.uni);
             stmt.setString("name", student.name);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean editStudent(Student student) {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_STUDENT);
+            stmt.setString("name", student.name);
+            stmt.setString("uni", student.uni);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteStudent(String student_uni) {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_STUDENT);
+            stmt.setString("uni", student_uni);
             stmt.executeUpdate();
         }
         catch (SQLException e) {

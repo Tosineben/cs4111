@@ -12,8 +12,8 @@ public final class WriterQueries {
             "where uni = :uni";
 
     public static final String DELETE_PROFESSOR =
-            "delete from Students s " +
-            "where s.uni = :uni";
+            "delete from Professors p " +
+            "where p.uni = :uni";
 
 
     public static final String INSERT_STUDENT =
