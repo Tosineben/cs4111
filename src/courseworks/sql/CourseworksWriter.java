@@ -12,7 +12,6 @@ public class CourseworksWriter implements ICourseworksWriter {
         _helper = new SqlHelper();
     }
 
-    // TODO: check that the same student UNI doesnt exist
     @Override
     public boolean createProfessor(Professor prof) {
         Connection conn = null;
@@ -78,7 +77,6 @@ public class CourseworksWriter implements ICourseworksWriter {
         return true;
     }
 
-    // TODO: check that the same prof UNI doesnt exist
     @Override
     public boolean createStudent(Student student) {
         Connection conn = null;

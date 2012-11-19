@@ -12,11 +12,11 @@
     String objs = "";
     for (Professor p : profs) {
         unis += "'" + p.uni + "',";
-        objs += p.uni + ": { name:'" + p.name + "', type: 'Professor' },";
+        objs += p.uni + ": { name:'" + p.name + "', type: 'professor' },";
     }
     for (Student s : students) {
         unis += "'" + s.uni + "',";
-        objs += s.uni + ": { name:'" + s.name + "', type: 'Student' },";
+        objs += s.uni + ": { name:'" + s.name + "', type: 'student' },";
     }
     unis = unis.substring(0, unis.length() - 1);
     objs = objs.substring(0, objs.length() - 1);
@@ -74,6 +74,7 @@
                         <label class="control-label" for="signup-uni">UNI</label>
                         <div class="controls">
                             <input class="input-xlarge" type="text" id="signup-uni" name="uni" placeholder="UNI">
+                            <span class="help-inline" id="signup-uni-help"></span>
                         </div>
                     </div>
                     <div class="control-group">
@@ -86,8 +87,8 @@
                         <label class="control-label" for="signup-type">Affiliation: </label>
                         <div class="controls">
                             <select id="signup-type" name="type">
-                                <option>Professor</option>
-                                <option>Student</option>
+                                <option value="professor">Professor</option>
+                                <option value="student">Student</option>
                             </select>
                         </div>
                     </div>
@@ -108,10 +109,9 @@
         $(function(){
 
             var allDudes = {<%=objs%>};
-            var allUnis = [<%=unis%>];
 
             $('#signin-uni').typeahead({
-                source: allUnis,
+                source: [<%=unis%>],
                 items: 12,
                 updater: function(item){
                     var dude = allDudes[item];
@@ -136,10 +136,20 @@
             });
 
             $('#signup-submit').click(function(){
-                signup($('#signup-uni').val(),
-                       $('#signup-name').val(),
-                       $('#signup-type').val());
+                var newUni = $('#signup-uni').val();
+                var existingDude = allDudes[newUni];
+
+                if (existingDude == null) {
+                    signup(newUni, $('#signup-name').val(),
+                            $('#signup-type').val());
+                }
+                else {
+                    var help = $('#signup-uni-help');
+                    help.text('A ' + existingDude.type + ' already exists with that UNI.')
+                    help.parents('.control-group').addClass('error');
+                }
             });
+
             $('#signout').click(function() {
                 $.post('/courseworks/signin');
                 window.location = '/courseworks';
