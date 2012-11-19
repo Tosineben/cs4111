@@ -63,8 +63,8 @@
                 <h1>Announcements</h1>
                 <% for(Announcement ancmt : announcements){
                     if(ancmt.time_read != null){%>
-                    <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" id= "<%= ancmt.anncmnt_id %>">
-                        <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close">×</button></div>
+                    <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" data-id="<%= ancmt.anncmnt_id %>" >
+                        <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
                         <div class="announcement-content">
                             <p><%= ancmt.message %></p>
                         </div>
@@ -124,7 +124,29 @@
              $(".span9 div ." + $(this).attr("class")).fadeToggle();
             });
 
+            $(".close").click(function(){
+                var ancmt_id = $(this).data("id");
 
+                $.ajax({
+                    type: 'POST',
+                    url: '/courseworks/coursepage',
+                    data: {
+                        announcement_id: ancmt_id,
+                        action: 'read'
+                    },
+                    success: function(){
+                        $(this).parent().parent().hide();
+                    },
+                    error: function(){
+                        alert('Sorry, we couldn\'t mark it read')
+                    }
+                });
+
+
+
+
+
+            });
         });
 
     </script>

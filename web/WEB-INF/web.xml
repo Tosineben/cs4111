@@ -36,4 +36,13 @@
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/courseworks/user/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CoursePageServlet</servlet-name>
+        <servlet-class>courseworks.CoursePageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CoursePageServlet</servlet-name>
+        <url-pattern>/courseworks/coursepage/*</url-pattern>
+    </servlet-mapping>
 </web-app>

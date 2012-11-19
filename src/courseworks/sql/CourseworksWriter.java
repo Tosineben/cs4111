@@ -687,9 +687,7 @@ public class CourseworksWriter implements ICourseworksWriter {
         try {
             conn = _helper.getConnection();
 
-            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_STUDENT_EDIT_ANNCMNT, anncmnt_id, student_uni) == 0) {
-                throw new SecurityException(String.format("student %s does not have permission to update announcement %d", student_uni, anncmnt_id));
-            }
+
 
             CallableStatement stmt;
 
@@ -697,6 +695,9 @@ public class CourseworksWriter implements ICourseworksWriter {
                 stmt = conn.prepareCall(WriterQueries.INSERT_READ_ANNCMNT);
             }
             else {
+                if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_STUDENT_EDIT_ANNCMNT, anncmnt_id, student_uni) == 0) {
+                    throw new SecurityException(String.format("student %s does not have permission to update announcement %d", student_uni, anncmnt_id));
+                }
                 stmt = conn.prepareCall(WriterQueries.DELETE_READ_ANNCMNT);
             }
 
