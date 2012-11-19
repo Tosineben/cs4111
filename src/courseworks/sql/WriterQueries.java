@@ -203,10 +203,10 @@ public final class WriterQueries {
 
         public static final String CAN_STUDENT_EDIT_ANNCMNT =
                 "select count(e.uni) " +
-                        "from Enrollment e " +
-                        "inner join Announcements a on a.course_id = e.course_id " +
-                        "where a.anncmnt_id = :anncmnt_id " +
-                        "and e.uni = :uni";
+                "from Enrollment e " +
+                "inner join Announcements a on a.course_id = e.course_id " +
+                "where a.anncmnt_id = :anncmnt_id " +
+                "and e.uni = :uni";
 
         public static final String CAN_STUDENT_EDIT_EVENT =
                 "select count(e.uni) " +

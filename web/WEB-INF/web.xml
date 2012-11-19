@@ -4,6 +4,7 @@
            xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
            version="2.5">
+
     <servlet>
         <servlet-name>SigninServlet</servlet-name>
         <servlet-class>courseworks.SigninServlet</servlet-class>
@@ -12,6 +13,7 @@
         <servlet-name>SigninServlet</servlet-name>
         <url-pattern>/courseworks/signin/*</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>StudentCourseMgmt</servlet-name>
         <servlet-class>courseworks.coursemgmt.StudentServlet</servlet-class>
@@ -20,6 +22,7 @@
         <servlet-name>StudentCourseMgmt</servlet-name>
         <url-pattern>/courseworks/coursemgmt/student/*</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>ProfCourseMgmt</servlet-name>
         <servlet-class>courseworks.coursemgmt.ProfServlet</servlet-class>
@@ -28,6 +31,7 @@
         <servlet-name>ProfCourseMgmt</servlet-name>
         <url-pattern>/courseworks/coursemgmt/professor/*</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UserServlet</servlet-name>
         <servlet-class>courseworks.UserServlet</servlet-class>
@@ -45,4 +49,5 @@
         <servlet-name>CoursePageServlet</servlet-name>
         <url-pattern>/courseworks/coursepage/*</url-pattern>
     </servlet-mapping>
+
 </web-app>
