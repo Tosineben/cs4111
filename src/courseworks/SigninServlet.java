@@ -32,7 +32,7 @@ public class SigninServlet extends HttpServlet {
         request.getSession().setAttribute(SessionKeys.logged_in_student, null);
         request.getSession().setAttribute(SessionKeys.logged_in_prof, null);
 
-        if ("Professor".equals(req_type)) {
+        if ("professor".equals(req_type)) {
             Professor p = new Professor(){{name=req_name; uni=req_uni;}};
 
             succeeded = writer.createProfessor(p);
@@ -42,7 +42,7 @@ public class SigninServlet extends HttpServlet {
                 request.getSession().setAttribute(SessionKeys.logged_in_prof, p);
             }
         }
-        else if ("Student".equals(req_type)) {
+        else if ("student".equals(req_type)) {
             Student s = new Student(){{name=req_name; uni=req_uni;}};
 
             succeeded = writer.createStudent(s);
@@ -67,11 +67,11 @@ public class SigninServlet extends HttpServlet {
 
         PrintWriter pw = new PrintWriter(response.getOutputStream());
 
-        if ("Professor".equals(req_type)) {
+        if ("professor".equals(req_type)) {
             pw.print("/courseworks/coursepage.jsp?prof_uni=" + req_uni);
             request.getSession().setAttribute(SessionKeys.logged_in_prof, new Professor(){{name=req_name; uni=req_uni;}});
         }
-        else if ("Student".equals(req_type)) {
+        else if ("student".equals(req_type)) {
             pw.print("/courseworks/coursepage.jsp?student_uni=" + req_uni);
             request.getSession().setAttribute(SessionKeys.logged_in_student, new Student(){{name=req_name; uni=req_uni;}});
         }
