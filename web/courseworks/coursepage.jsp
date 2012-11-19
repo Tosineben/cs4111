@@ -62,7 +62,7 @@
             <div id="announcements">
                 <h1>Announcements</h1>
                 <% for(Announcement ancmt : announcements){
-                    if(ancmt.time_read != null){%>
+                    if(ancmt.time_read == null){%>
                     <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" data-id="<%= ancmt.anncmnt_id %>" >
                         <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
                         <div class="announcement-content">
