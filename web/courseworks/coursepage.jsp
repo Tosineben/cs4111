@@ -29,10 +29,12 @@
     Collections.sort((List<Event>) events, new EventComperator());
 %>
 
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <title></title>
+        <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="/styles/courseworks.css"/>
     </head>
 
 
@@ -58,11 +60,27 @@
 
     <div id="Calendar">
         <h1>Events</h1>
-        <% for(Event event : events){%>
-            <div class="<%=event.course_number.replaceAll("\\s","")%> cal<%=event.calendar_id%>" id="<%=event.event_id%>">
+        <%
+            List<Message> messages;
+
+            for(Event event : events){
+                messages = rdr.getMessagesForEvent(event.event_id);
+
+
+        %>
+
+            <div class="event <%=event.course_number.replaceAll("\\s","")%> cal<%=event.calendar_id%>" id="<%=event.event_id%>">
                 <h2><%=event.title%></h2>
                 <h4><%=event.start%> - <%=event.end%></h4>
                 <p><%=event.description%></p>
+                <div class="message-container">
+                    <%for(Message msg : messages){%>
+                    <div class="message">
+                        <%=msg.message%>
+                    </div>
+
+                    <%}%>
+                </div>
             </div>
 
 
