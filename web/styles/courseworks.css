@@ -12,3 +12,28 @@ input {
 .navbar {
     margin-top: -40px;
 }
+
+.event{
+    display: block;
+    width: 500px;
+    position: relative;
+    margin: 15px auto;
+    padding: 20px 15px;
+    background-color: white;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.message{
+    display: block;
+    position: relative;
+    margin: 15px auto;
+    padding: 20px 15px;
+    background-color: #bce8f1;
+    border: 1px solid #DDD;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
