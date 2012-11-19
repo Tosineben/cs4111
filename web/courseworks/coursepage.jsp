@@ -38,8 +38,6 @@
 
     <body>
 
-
-
             <jsp:include page="nav.jsp">
                 <jsp:param name="calendar" value="active" />
             </jsp:include>
