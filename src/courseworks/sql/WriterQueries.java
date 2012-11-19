@@ -6,29 +6,52 @@ public final class WriterQueries {
             "insert into Professors (uni, name) " +
             "values (:uni, :name)";
 
+
     public static final String INSERT_STUDENT =
             "insert into Students (uni, name) " +
             "values (:uni, :name)";
+
 
     public static final String INSERT_EVENT =
             "insert into Events (event_id, calendar_id, title, startTime, endTime, description, location) " +
             "values (:event_id, :calendar_id, :title, :startTime, :endTime, :description, :location)";
 
+    public static final String DELETE_EVENT =
+            "delete from Events ev " +
+            "where ev.event_id = :event_id";
+
+
     public static final String INSERT_CALENDAR =
             "insert into Calendars (calendar_id, course_id, name) " +
             "values (:calendar_id, :course_id, :name)";
+
+    public static final String DELETE_CALENDAR =
+            "delete from Calendars ca " +
+            "where ca.calendar_id = :calendar_id";
+
 
     public static final String INSERT_ANNCMNT =
             "insert into Announcements (anncmnt_id, course_id, message, time_posted) " +
             "values (:anncmnt_id, :course_id, :message, :time_posted)";
 
+    public static final String DELETE_ANNCMNT =
+            "delete from Announcements a" +
+            "where a.anncmnt_id = :anncmnt_id";
+
+
     public static final String INSERT_DOCUMENT =
             "insert into Documents (document_id, file_path, event_id) " +
             "values (:document_id, :file_path, :event_id)";
 
+    public static final String DELETE_DOCUMENT =
+            "delete from Documents d " +
+            "where d.document_id = :document_id";
+
+
     public static final String INSERT_MESSAGE =
             "insert into Messages (message_id, uni, event_id, message, time_posted) " +
             "values (:message_id, :uni, :event_id, :message, :time_posted)";
+
 
     public static final String INSERT_COURSE =
             "insert into Courses (course_id, uni, courseNumber, name, location, description) " +
@@ -43,28 +66,28 @@ public final class WriterQueries {
             "where course_id = :course_id";
 
     public static final String DELETE_COURSE =
-            "delete from Courses " +
-            "where course_id = :course_id " +
-            "and uni = :uni";
+            "delete from Courses c " +
+            "where c.course_id = :course_id";
+
 
     public static final String INSERT_ENROLLMENT =
             "insert into Enrollment (uni, course_id) " +
             "values (:uni, :course_id)";
 
     public static final String DELETE_ENROLLMENT =
-            "delete from Enrollment " +
-            "where uni = :uni " +
-            "and course_id = :course_id";
+            "delete from Enrollment e " +
+            "where e.uni = :uni " +
+            "and e.course_id = :course_id";
+
 
     public static final String INSERT_READ_ANNCMNT =
             "insert into ReadAnnouncement (anncmnt_id, uni, time_read) " +
             "values (:anncmnt_id, :uni, :time_read)";
 
     public static final String DELETE_READ_ANNCMNT =
-            "delete from ReadAnnouncement " +
-            "where anncmnt_id = :anncmnt_id " +
-              "and uni = :uni";
-
+            "delete from ReadAnnouncement ra " +
+            "where ra.anncmnt_id = :anncmnt_id " +
+            "and ra.uni = :uni";
 
     public static final class IdIncrement {
 
@@ -95,13 +118,48 @@ public final class WriterQueries {
 
     public static final class Validation {
 
-        public static final String VALIDATE_EVENT =
-        "select count(c.uni) " +
-        "from Calendars ca " +
-        "inner join Courses c ON c.course_id = ca.course_id " +
-        "where ca.calendar_id = :calendar_id " +
-        "and c.uni = :uni";
+        public static final String CAN_ADD_EVENT =
+                "select count(c.uni) " +
+                "from Courses c " +
+                "inner join Calendars ca ON ca.course_id = c.course_id " +
+                "where ca.calendar_id = :calendar_id " +
+                "and c.uni = :uni";
 
+        public static final String CAN_EDIT_COURSE =
+                "select count(c.uni) " +
+                "from Courses c " +
+                "where c.course_id = :course_id " +
+                "and c.uni = :uni";
 
+        public static final String CAN_EDIT_ANNCMNT =
+                "select count(c.uni) " +
+                "from Courses c " +
+                "inner join Announcements a on a.course_id = c.course_id " +
+                "where a.anncmnt_id = :anncmnt_id" +
+                "and c.uni = :uni";
+
+        public static final String CAN_EDIT_CALENDAR =
+                "select count(c.uni) " +
+                "from Courses c " +
+                "inner join Calendars ca on ca.course_id = c.course_id " +
+                "where ca.calendar_id = :calendar_id " +
+                "and c.uni = :uni";
+
+        public static final String CAN_EDIT_EVENT =
+                "select count(c.uni) " +
+                "from Courses c " +
+                "inner join Calendars ca on ca.course_id = ca.course_id " +
+                "inner join Events ev on ev.calendar_id = ca.calendar_id " +
+                "where ev.event_id = :event_id " +
+                "and c.uni = :uni";
+
+        public static final String CAN_EDIT_DOCUMENT =
+                "select count(c.uni) " +
+                "from Courses c " +
+                "inner join Calendars ca on ca.course_id = c.course_id " +
+                "inner join Events ev on ev.calendar_id = ca.calendar_id " +
+                "inner join Documents d on d.event_id = ev.event_id " +
+                "where d.document_id = :document_id " +
+                "and c.uni = :uni";
     }
 }

@@ -12,11 +12,10 @@ public class CourseworksWriter implements ICourseworksWriter {
         _helper = new SqlHelper();
     }
 
+    // TODO: check that the same student UNI doesnt exist
     @Override
     public boolean createProfessor(Professor prof) {
         Connection conn = null;
-
-        // need to check that the same student UNI doesnt exist
 
         try {
             conn = _helper.getConnection();
@@ -36,11 +35,10 @@ public class CourseworksWriter implements ICourseworksWriter {
         return true;
     }
 
+    // TODO: check that the same prof UNI doesnt exist
     @Override
     public boolean createStudent(Student student) {
         Connection conn = null;
-
-        // need to check that the same prof UNI doesnt exist
 
         try {
             conn = _helper.getConnection();
@@ -60,6 +58,7 @@ public class CourseworksWriter implements ICourseworksWriter {
         return true;
     }
 
+    // TODO data validation
     @Override
     public int createEvent(int calendar_id, Event event) {
         Connection conn = null;
@@ -68,7 +67,6 @@ public class CourseworksWriter implements ICourseworksWriter {
         try {
             conn = _helper.getConnection();
 
-            // TODO data validation
             // if (_helper.executeScalar(conn, WriterQueries.Validation.VALIDATE_EVENT, calendar_id, logged_in_prof_uni) == 0) {
             //     throw new SecurityException(String.format("professor %s does not have permission to create event for calendar %d", logged_in_prof_uni, calendar_id));
             // }
@@ -97,11 +95,37 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
+    public boolean deleteEvent(int event_id, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_EVENT, event_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to delete event %d", prof_uni, event_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_EVENT);
+            stmt.setInt("event_id", event_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    // TODO check to make sure professor teaches course
+    @Override
     public int createCalendar(int course_id, Calendar cal) {
         Connection conn = null;
         int newCalendarId = 0;
 
-        // TODO check to make sure professor teaches course
         // SELECT C.uni
         // FROM Courses C
         // WHERE C.course_id = @course_id
@@ -128,11 +152,37 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
+    public boolean deleteCalendar(int calendar_id, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_CALENDAR, calendar_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to delete calendar %d", prof_uni, calendar_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_CALENDAR);
+            stmt.setInt("calendar_id", calendar_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    // TODO check to make sure prof teaches course
+    @Override
     public int createAnnouncement(int course_id, Announcement anncmnt) {
         Connection conn = null;
         int newAnncmntId = 0;
 
-        // TODO check to make sure prof teaches course
         // SELECT C.uni
         // FROM Courses C
         // WHERE C.course_id = @course_id
@@ -160,11 +210,36 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
+    public boolean deleteAnnouncement(int anncmnt_id, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_ANNCMNT, anncmnt_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to delete announcement %d", prof_uni, anncmnt_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_ANNCMNT);
+            stmt.setInt("anncmnt_id", anncmnt_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    // TODO check logged in prof owns event
+    @Override
     public int createDocument(int event_id, Document doc) {
         Connection conn = null;
         int newDocId = 0;
-
-        // TODO check logged in prof owns event
 
         try {
             conn = _helper.getConnection();
@@ -189,11 +264,37 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
+    public boolean deleteDocument(int document_id, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_DOCUMENT, document_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to delete document %d", prof_uni, document_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_DOCUMENT);
+            stmt.setInt("document_id", document_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    // TODO check to make sure student is enrolled
+    @Override
     public int createMessage(int event_id, Message msg) {
         Connection conn = null;
         int newMessageId = 0;
 
-        // TODO check to make sure student is enrolled
         // SELECT E.uni
         // FROM Message M
         // INNER JOIN Events Ev ON Ev.event_id = M.event_id
@@ -222,8 +323,9 @@ public class CourseworksWriter implements ICourseworksWriter {
         return newMessageId;
     }
 
+    // TODO: validate same event name/location doesnt exist
     @Override
-    public int createCourse(String prof_uni, Course course) {
+    public int createCourse(Course course) {
         Connection conn = null;
         int newCourseId = 0;
 
@@ -233,7 +335,7 @@ public class CourseworksWriter implements ICourseworksWriter {
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_COURSE);
             stmt.setInt("course_id", newCourseId);
-            stmt.setString("uni", prof_uni);
+            stmt.setString("uni", course.professor.uni);
             stmt.setString("courseNumber", course.course_number);
             stmt.setString("name", course.name);
             stmt.setString("location", course.location);
@@ -252,11 +354,15 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
-    public boolean updateCourse(String prof_uni, Course course) {
+    public boolean updateCourse(Course course, String prof_uni) throws SecurityException {
         Connection conn = null;
 
         try {
             conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_COURSE, course.course_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to udpate course %d", prof_uni, course.course_id));
+            }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_COURSE);
             stmt.setString("courseNumber", course.course_number);
@@ -278,11 +384,15 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
-    public boolean deleteCourse(String prof_uni, int course_id) {
+    public boolean deleteCourse(int course_id, String prof_uni) throws SecurityException {
         Connection conn = null;
 
         try {
             conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_COURSE, course_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to delete course %d", prof_uni, course_id));
+            }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_COURSE);
             stmt.setInt("course_id", course_id);
@@ -301,11 +411,12 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
-    public boolean enrollStudentInCourse(String uni, int course_id) {
+    public boolean enrollStudentInCourse(String uni, int course_id) throws SecurityException {
         Connection conn = null;
 
         try {
             conn = _helper.getConnection();
+
             CallableStatement stmt = conn.prepareCall(WriterQueries.INSERT_ENROLLMENT);
             stmt.setString("uni", uni);
             stmt.setInt("course_id", course_id);

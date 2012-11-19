@@ -39,7 +39,6 @@ public class ProfServlet extends HttpServlet {
                     name = course_name;
                     location = loc;
                     description = desc;
-                    professor = prof;
                 }};
                 success = prof.addCourse(course) > 0;
             }

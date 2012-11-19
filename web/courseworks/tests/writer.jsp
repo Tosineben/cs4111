@@ -76,7 +76,7 @@
 <!-- course tests -->
 <%
     // creating course works
-    int newCourseId = wrt.createCourse(newProfUni, new Course(){{
+    int newCourseId = wrt.createCourse(new Course(){{
         name = "Intro to Databases"; location = "411 IAB"; description = "Learn about databases."; course_number = "COMS W4111"; professor = newProf;
     }});
     assertTrue(newCourseId > 0, "adding course failed");

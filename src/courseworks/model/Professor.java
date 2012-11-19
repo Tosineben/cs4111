@@ -16,17 +16,18 @@ public class Professor {
 
     public int addCourse(Course course) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.createCourse(uni, course);
+        course.professor = this;
+        return wtr.createCourse(course);
     }
 
     public boolean updateCourse(Course course) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.updateCourse(uni, course);
+        return wtr.updateCourse(course, uni);
     }
 
     public boolean removeCourse(int course_id) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.deleteCourse(uni, course_id);
+        return wtr.deleteCourse(course_id, uni);
     }
 
 }
