@@ -94,6 +94,37 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
+    public boolean updateEvent(Event event, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_PROF_EDIT_EVENT, event.event_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to update event %d", prof_uni, event.event_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_EVENT);
+            stmt.setString("title", event.title);
+            stmt.setTimestamp("startTime", new Timestamp(event.start.getTime()));
+            stmt.setTimestamp("endTime", new Timestamp(event.end.getTime()));
+            stmt.setString("description", event.description);
+            stmt.setString("location", event.location);
+            stmt.setInt("event_id", event.event_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean deleteEvent(int event_id, String prof_uni) throws SecurityException {
         Connection conn = null;
 
@@ -148,6 +179,33 @@ public class CourseworksWriter implements ICourseworksWriter {
         }
 
         return newCalendarId;
+    }
+
+    @Override
+    public boolean updateCalendar(Calendar cal, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_CALENDAR, cal.calendar_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to update calendar %d", prof_uni, cal.calendar_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_CALENDAR);
+            stmt.setString("name", cal.name);
+            stmt.setInt("calendar_id", cal.calendar_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
     }
 
     @Override
@@ -206,6 +264,33 @@ public class CourseworksWriter implements ICourseworksWriter {
         }
 
         return newAnncmntId;
+    }
+
+    @Override
+    public boolean updateAnnouncement(Announcement anncmnt, String prof_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_PROF_EDIT_ANNCMNT, anncmnt.anncmnt_id, prof_uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to update anncmnt %d", prof_uni, anncmnt.anncmnt_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_ANNCMNT);
+            stmt.setString("message", anncmnt.message);
+            stmt.setInt("anncmnt_id", anncmnt.anncmnt_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
     }
 
     @Override
@@ -323,6 +408,59 @@ public class CourseworksWriter implements ICourseworksWriter {
         }
 
         return newMessageId;
+    }
+
+    @Override
+    public boolean updateMessage(Message msg) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_MESSAGE, msg.message_id, msg.author.uni) == 0) {
+                throw new SecurityException(String.format("student %s does not have permission to update message %d", msg.author.uni, msg.message_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_MESSAGE);
+            stmt.setString("message", msg.message);
+            stmt.setInt("message_id", msg.message_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteMessage(int message_id, String student_uni) throws SecurityException {
+        Connection conn = null;
+
+        try {
+            conn = _helper.getConnection();
+
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_MESSAGE, message_id, student_uni) == 0) {
+                throw new SecurityException(String.format("student %s does not have permission to delete message %d", student_uni, message_id));
+            }
+
+            CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_MESSAGE);
+            stmt.setInt("message_id", message_id);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            _helper.tryClose(null, conn);
+        }
+
+        return true;
     }
 
     // TODO: validate same event name/location doesnt exist

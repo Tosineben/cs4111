@@ -13,14 +13,17 @@ public interface ICourseworksWriter {
 
     // returns new event_id, 0 on failure
     int createEvent(int calendar_id, Event event, String prof_uni);
+    boolean updateEvent(Event event, String prof_uni);
     boolean deleteEvent(int event_id, String prof_uni);
 
     // returns new calendar_id, 0 on failure
     int createCalendar(int course_id, Calendar cal, String prof_uni);
+    boolean updateCalendar(Calendar cal, String prof_uni);
     boolean deleteCalendar(int calendar_id, String prof_uni);
 
     // returns new anncmnt_id, 0 on failure
     int createAnnouncement(int course_id, Announcement anncmnt, String prof_uni);
+    boolean updateAnnouncement(Announcement anncmnt, String prof_uni);
     boolean deleteAnnouncement(int anncmnt_id, String prof_uni);
 
     // returns new document_id, 0 on failure
@@ -29,6 +32,8 @@ public interface ICourseworksWriter {
 
     // returns new message_id, 0 on failure
     int createMessage(int event_id, Message msg);
+    boolean updateMessage(Message msg);
+    boolean deleteMessage(int message_id, String student_uni);
 
     // returns new course_id, 0 on failure
     int createCourse(Course course);
