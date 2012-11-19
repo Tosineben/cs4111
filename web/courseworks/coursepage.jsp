@@ -9,11 +9,7 @@
 
 <%
 
-    //Student student = (Student)session.getAttribute(SessionKeys.logged_in_student);
-
-    //TODO remove test code, replace with session
-    Student student = new Student();
-    student.uni = "vs2411";
+    Student student = (Student)session.getAttribute(SessionKeys.logged_in_student);
 
     if (student == null){
         response.sendRedirect("/courseworks");
@@ -42,69 +38,90 @@
 
     <body>
 
-    <jsp:include page="nav.jsp">
-        <jsp:param name="calendar" value="active" />
-    </jsp:include>
+            <jsp:include page="nav.jsp">
+                <jsp:param name="calendar" value="active" />
+            </jsp:include>
 
+    <div class="wrapper">
 
-    <ul id="course_list">
-        <% for(Course course : courses){ %>
-            <li class= "<%= course.course_number.replaceAll("\\s","") %>"><%=course.name%></li>
-        <%}%>
-    </ul>
-
-
-    <div id="announcements">
-        <h1>Announcements</h1>
-        <% for(Announcement ancmt : announcements){ %>
-            <div class="<%=ancmt.course_number.replaceAll("\\s","")%> <%= ancmt.time_read == null ? "unread" : "read" %>" id= "<%= ancmt.anncmnt_id %>">
-                <h3><%=ancmt.time_posted%></h3>
-                <p><%= ancmt.message %></p>
-                <p><%= ancmt.author %></p>
+        <div class="row-fluid">
+            <div class="span3">
+                <ul class="nav nav-tabs nav-stacked">
+                    <% for(Course course : courses){ %>
+                        <li class= "<%= course.course_number.replaceAll("\\s","") %>"> <a href="#"><%=course.name%></a></li>
+                    <%}%>
+                </ul>
             </div>
-        <%}%>
-    </div>
 
-    <div id="Calendar">
-        <h1>Events</h1>
-        <%
-            List<Message> messages;
+            <div class="span9">
+            <div id="announcements">
+                <h1>Announcements</h1>
+                <% for(Announcement ancmt : announcements){
+                    if(ancmt.time_read != null){%>
+                    <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" id= "<%= ancmt.anncmnt_id %>">
+                        <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close">×</button></div>
+                        <div class="announcement-content">
+                            <p><%= ancmt.message %></p>
+                        </div>
+                    </div>
+                <%}}%>
+            </div>
 
-            for(Event event : events){
-                messages = rdr.getMessagesForEvent(event.event_id);
+            <div id="Calendar">
+                <h1>Events</h1>
+                <%
+                    List<Message> messages;
 
+                    for(Event event : events){
+                        messages = rdr.getMessagesForEvent(event.event_id);
+                 %>
 
-        %>
+                    <div class="event <%=event.course_number.replaceAll("\\s","")%> cal<%=event.calendar_id%>" id="<%=event.event_id%>">
+                        <h3><%=event.title%></h3>
+                        <em><%=event.start%> - <%=event.end%></em>
+                        <p><%=event.description%></p>
+                        <div class="message-container">
+                            <%for(Message msg : messages){%>
+                            <div class="message">
+                                <%=msg.message%>
+                            </div>
 
-            <div class="event <%=event.course_number.replaceAll("\\s","")%> cal<%=event.calendar_id%>" id="<%=event.event_id%>">
-                <h2><%=event.title%></h2>
-                <h4><%=event.start%> - <%=event.end%></h4>
-                <p><%=event.description%></p>
-                <div class="message-container">
-                    <%for(Message msg : messages){%>
-                    <div class="message">
-                        <%=msg.message%>
+                            <%}%>
+
+                           <form>
+                               <textarea rows="3"></textarea>
+                               <button class="btn btn-large btn-block" type="button">Add a Comment</button>
+                           </form>
+                        </div>
                     </div>
 
-                    <%}%>
-                </div>
+
+                <%}%>
             </div>
+          </div>
+        </div>
+   </div>
 
 
-        <%}%>
-    </div>
+ </body>
 
 
-
-
-
-
-
-    </body>
 
     <!-- scripts here -->
     <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/scripts/nav.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $("li").click(function(){
+             $(".span9 div ." + $(this).attr("class")).fadeToggle();
+            });
+
+
+        });
+
+    </script>
 
 </html>

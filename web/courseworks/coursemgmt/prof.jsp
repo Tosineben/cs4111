@@ -1,4 +1,5 @@
 <%@ page import="courseworks.SessionKeys" %>
+<%@ page import="courseworks.sql.*" %>
 <%@ page import="courseworks.model.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="courseworks.sql.ICourseworksReader" %>
@@ -9,12 +10,7 @@
     Professor prof = (Professor)session.getAttribute(SessionKeys.logged_in_prof);
 
     if (prof == null) {
-        if (session.getAttribute(SessionKeys.logged_in_student) != null) {
-            response.sendRedirect("/courseworks/coursemgmt/student.jsp");
-        }
-        else {
-            response.sendRedirect("/courseworks");
-        }
+        response.sendRedirect("/courseworks/index.jsp");
         return;
     }
 
@@ -41,9 +37,6 @@
     </style>
 </head>
 <body>
-    <jsp:include page="../nav.jsp">
-        <jsp:param name="courseMgmt" value="active" />
-    </jsp:include>
     <div class="container-fluid">
         <h1>Course Management</h1>
         <hr>
@@ -197,7 +190,6 @@
 <!-- scripts here -->
 <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
 <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
-<script type="text/javascript" src="/scripts/nav.js"></script>
 <script type="text/javascript">
     (function(){
 
