@@ -2,7 +2,6 @@
 <%@ page import="courseworks.model.*" %>
 <%@ page import="courseworks.model.comperators.*" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="courseworks.SessionKeys" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -11,8 +10,14 @@
 
     Student student = (Student)session.getAttribute(SessionKeys.logged_in_student);
 
-    if (student == null){
-        response.sendRedirect("/courseworks");
+    if (student == null) {
+        if (session.getAttribute(SessionKeys.logged_in_prof) != null) {
+            response.sendRedirect("/courseworks/coursemgmt/prof.jsp");
+        }
+        else {
+            response.sendRedirect("/courseworks");
+        }
+        return;
     }
 
     ICourseworksReader rdr = new CourseworksReader();
@@ -110,7 +115,7 @@
     <!-- scripts here -->
     <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/scripts/nav.js"></script>
+    <script type="text/javascript" src="/scripts/navigation.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
