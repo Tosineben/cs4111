@@ -10,9 +10,9 @@ public class Announcement {
     public int anncmnt_id;
     public String message;
     public Date time_posted;
-    public String course_number;
-    public String author;
-    public Date time_read;
+    public String course_number;  // TODO: this does not identify anything
+    public String author;         // TODO: this is professor name, not uni
+    public Date time_read;        // TODO: no way to know what student is this for
 
     public List<ReadAnnouncment> getStudentsRead() {
         ICourseworksReader rdr = new CourseworksReader();

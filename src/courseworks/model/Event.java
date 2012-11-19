@@ -12,8 +12,8 @@ public class Event {
     public Date end;
     public String description;
     public String location;
-    public String course_number;
-    public int calendar_id;
+    public String course_number;  // TODO: this should not be on here
+    public int calendar_id;       // TODO: same with this...
 
     public List<Message> getMessages() {
         ICourseworksReader rdr = new CourseworksReader();
@@ -30,9 +30,9 @@ public class Event {
         return wtr.createMessage(event_id, msg);
     }
 
-    public int addDocument(Document doc) {
+    public int addDocument(Document doc, String prof_uni) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.createDocument(event_id, doc);
+        return wtr.createDocument(event_id, doc, prof_uni);
     }
 }
 

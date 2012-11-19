@@ -31,12 +31,12 @@ public class Course {
 
     public int addCalendar(Calendar cal) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.createCalendar(course_id, cal);
+        return wtr.createCalendar(course_id, cal, professor.uni);
     }
 
     public int addAnnouncement(Announcement anncmnt) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.createAnnouncement(course_id, anncmnt);
+        return wtr.createAnnouncement(course_id, anncmnt, professor.uni);
     }
 
 }

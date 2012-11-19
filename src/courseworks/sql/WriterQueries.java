@@ -118,20 +118,13 @@ public final class WriterQueries {
 
     public static final class Validation {
 
-        public static final String CAN_ADD_EVENT =
-                "select count(c.uni) " +
-                "from Courses c " +
-                "inner join Calendars ca ON ca.course_id = c.course_id " +
-                "where ca.calendar_id = :calendar_id " +
-                "and c.uni = :uni";
-
         public static final String CAN_EDIT_COURSE =
                 "select count(c.uni) " +
                 "from Courses c " +
                 "where c.course_id = :course_id " +
                 "and c.uni = :uni";
 
-        public static final String CAN_EDIT_ANNCMNT =
+        public static final String CAN_PROF_EDIT_ANNCMNT =
                 "select count(c.uni) " +
                 "from Courses c " +
                 "inner join Announcements a on a.course_id = c.course_id " +
@@ -145,7 +138,7 @@ public final class WriterQueries {
                 "where ca.calendar_id = :calendar_id " +
                 "and c.uni = :uni";
 
-        public static final String CAN_EDIT_EVENT =
+        public static final String CAN_PROF_EDIT_EVENT =
                 "select count(c.uni) " +
                 "from Courses c " +
                 "inner join Calendars ca on ca.course_id = ca.course_id " +
@@ -161,5 +154,20 @@ public final class WriterQueries {
                 "inner join Documents d on d.event_id = ev.event_id " +
                 "where d.document_id = :document_id " +
                 "and c.uni = :uni";
+
+        public static final String CAN_STUDENT_EDIT_EVENT =
+                "select count(e.uni) " +
+                "from Enrollment e " +
+                "inner join Calendars ca on ca.course_id = e.course_id " +
+                "inner join Events ev on ev.calendar_id = ca.calendar_id " +
+                "where ev.event_id = :event_id " +
+                "and e.uni = :uni";
+
+        public static final String CAN_STUDENT_EDIT_ANNCMNT =
+                "select count(e.uni) " +
+                "from Enrollment e " +
+                "inner join Announcements a on a.course_id = e.course_id " +
+                "where a.anncmnt_id = :anncmnt_id " +
+                "and e.uni = :uni";
     }
 }

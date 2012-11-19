@@ -95,7 +95,7 @@
     // create new announcement
     int newAnncmntId = wrt.createAnnouncement(newCourseId, new Announcement(){{
         message = "Be warned, midterm exam is brutally difficult!";
-    }});
+    }}, newProfUni);
     assertTrue(newAnncmntId > 0, "failed to create anncmnt");
 
     // student reads announcement
@@ -116,7 +116,7 @@
     // create calendar
     int newCalendarId = wrt.createCalendar(newCourseId, new Calendar(){{
         name = "TA Office Hours";
-    }});
+    }}, newProfUni);
     assertTrue(newCalendarId > 0, "failed to create calendar");
 
     // create event
@@ -124,7 +124,7 @@
     final java.util.Calendar endT = new GregorianCalendar(2012, java.util.Calendar.DECEMBER, 10, 18, 0);
     int newEventId = wrt.createEvent(newCalendarId, new Event(){{
         title = "John's Office Hours"; start = startT.getTime(); end = endT.getTime(); location = "Mudd TA Room"; description = "Weekly office hours, ask any questions";
-    }});
+    }}, newProfUni);
     assertTrue(newEventId > 0, "failed to create event");
 %>
 
@@ -133,7 +133,7 @@
     // create document
     int newDocumentId = wrt.createDocument(newEventId, new Document(){{
         file_path = "C:/tmp/lecture.pdf";
-    }});
+    }}, newProfUni);
     assertTrue(newDocumentId > 0, "failed to create document");
 
     // create message
