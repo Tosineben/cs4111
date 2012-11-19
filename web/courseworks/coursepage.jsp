@@ -16,8 +16,9 @@
     student.uni = "vs2411";
 
     if (student == null){
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("/courseworks");
     }
+
     ICourseworksReader rdr = new CourseworksReader();
     List<Course> courses = rdr.getCoursesForStudent(student.uni);
 

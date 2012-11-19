@@ -26,14 +26,14 @@
             <div class="nav-collapse collapse navbar-responsive-collapse">
                 <ul class="nav">
                     <li class="${param.calendar}">
-                        <a href="#">Calendar</a>
+                        <a href="/courseworks/coursepage.jsp">Calendar</a>
                     </li>
                     <li class=${param.courseMgmt}>
-                        <a href="#">Courses</a>
+                        <a href="/courseworks/coursemgmt/student.jsp">Courses</a>
                     </li>
                 </ul>
                 <ul class="nav pull-right">
-                    <li class="disabled"><a><%=name%></a></li>
+                    <p class="navbar-text pull-left"><%=name%></p>
                     <li class="divider-vertical"></li>
                     <li>
                         <a href="#" onclick="return false;" id="signout">Sign Out</a>
