@@ -125,31 +125,31 @@
                     <div class="modal-body">
                         <form class="form-horizontal">
                             <div class="control-group">
-                                <label class="control-label" for="edit-number">Number</label>
+                                <label class="control-label" for="edit-number-<%=c.course_id%>">Number</label>
                                 <div class="controls">
-                                    <input class="input-xlarge" type="text" id="edit-number" value="<%=c.course_number%>">
+                                    <input class="input-xlarge" type="text" id="edit-number-<%=c.course_id%>" value="<%=c.course_number%>">
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="edit-name">Name</label>
+                                <label class="control-label" for="edit-name-<%=c.course_id%>">Name</label>
                                 <div class="controls">
-                                    <input class="input-xlarge" type="text" id="edit-name" value="<%=c.name%>">
+                                    <input class="input-xlarge" type="text" id="edit-name-<%=c.course_id%>" value="<%=c.name%>">
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="edit-location">Location</label>
+                                <label class="control-label" for="edit-location-<%=c.course_id%>">Location</label>
                                 <div class="controls">
-                                    <input class="input-xlarge" type="text" id="edit-location" value="<%=c.location%>">
+                                    <input class="input-xlarge" type="text" id="edit-location-<%=c.course_id%>" value="<%=c.location%>">
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="edit-desc">Description</label>
+                                <label class="control-label" for="edit-desc-<%=c.course_id%>">Description</label>
                                 <div class="controls">
-                                    <textarea id="edit-desc" class="input-xlarge" rows="5"><%=c.description%></textarea>
+                                    <textarea id="edit-desc-<%=c.course_id%>" class="input-xlarge" rows="5"><%=c.description%></textarea>
                                 </div>
                             </div>
                             <div class="form-actions">
-                                <button type="submit" id="edit-submit" data-courseid="<%=c.course_id%>" onclick="return false;" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-primary edit-submit" data-courseid="<%=c.course_id%>" onclick="return false;">Submit</button>
                                 <button class="btn" data-dismiss="modal">Cancel</button>
                             </div>
                         </form>
@@ -211,12 +211,12 @@
                 postCourse('add', null, course_number, course_name, location, description);
             });
 
-            $('#edit-submit').click(function(){
+            $('.edit-submit').click(function(){
                 var course_id = $(this).data('courseid');
-                var course_number = $('#edit-number').val();
-                var course_name = $('#edit-name').val();
-                var location = $('#edit-location').val();
-                var description = $('#edit-desc').val();
+                var course_number = $('#edit-number-' + course_id).val();
+                var course_name = $('#edit-name-' + course_id).val();
+                var location = $('#edit-location-' + course_id).val();
+                var description = $('#edit-desc-' + course_id).val();
                 postCourse('edit', course_id, course_number, course_name, location, description);
             });
 
