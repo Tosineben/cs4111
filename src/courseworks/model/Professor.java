@@ -19,6 +19,11 @@ public class Professor {
         return wtr.createCourse(uni, course);
     }
 
+    public boolean updateCourse(Course course) {
+        ICourseworksWriter wtr = new CourseworksWriter();
+        return wtr.updateCourse(uni, course);
+    }
+
     public boolean removeCourse(int course_id) {
         ICourseworksWriter wtr = new CourseworksWriter();
         return wtr.deleteCourse(uni, course_id);

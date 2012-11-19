@@ -97,6 +97,16 @@ public final class ReaderQueries {
                     "inner join Courses c on c.course_id = e.course_id " +
             "where e.uni = :student_uni ";
 
+    public static final String GET_MESSAGES_BY_STUDENT_COURSE_FOR_PROF =
+            "SELECT S.uni, C.course_id, COUNT(M.message_id) AS num_messages " +
+            "FROM Students S " +
+            "INNER JOIN Enrollment E ON E.uni = S.uni " +
+            "INNER JOIN Courses C ON C.course_id = E.course_id " +
+            "LEFT OUTER JOIN Calendars Cal ON Cal.course_id = C.course_id " +
+            "LEFT OUTER JOIN Events Ev ON Ev.calendar_id = Cal.calendar_id " +
+            "LEFT OUTER JOIN Messages M ON (M.uni = S.uni AND M.event_id = Ev.event_id) " +
+            "WHERE C.uni = :prof_uni " +
+            "GROUP BY S.uni, C.course_id";
 
     //TODO remove either course_name or course_number from query
     public static final String GET_ANNOUNCEMENTS_FOR_STUDENT =

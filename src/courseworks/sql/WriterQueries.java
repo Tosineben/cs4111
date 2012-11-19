@@ -34,6 +34,14 @@ public final class WriterQueries {
             "insert into Courses (course_id, uni, courseNumber, name, location, description) " +
             "values (:course_id, :uni, :courseNumber, :name, :location, :description)";
 
+    public static final String UPDATE_COURSE =
+            "update Courses set " +
+            "courseNumber = :courseNumber," +
+            "name = :name," +
+            "location = :location," +
+            "description = :description " +
+            "where course_id = :course_id";
+
     public static final String DELETE_COURSE =
             "delete from Courses " +
             "where course_id = :course_id " +

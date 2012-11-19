@@ -25,15 +25,15 @@ public class ProfServlet extends HttpServlet {
         final Professor prof = (Professor)request.getSession().getAttribute(SessionKeys.logged_in_prof);
 
         // get params
-        final String addRemove = request.getParameter("type");
-        final String course_id = request.getParameter("course_id");
+        final String type = request.getParameter("type");
+        final String id = request.getParameter("course_id");
         final String number = request.getParameter("course_number");
         final String course_name = request.getParameter("course_name");
         final String loc = request.getParameter("location");
         final String desc = request.getParameter("description");
 
         if (prof != null) {
-            if ("add".equals(addRemove)) {
+            if ("add".equals(type)) {
                 Course course = new Course(){{
                     course_number = number;
                     name = course_name;
@@ -43,8 +43,19 @@ public class ProfServlet extends HttpServlet {
                 }};
                 success = prof.addCourse(course) > 0;
             }
-            else if ("remove".equals(addRemove)) {
-                success = prof.removeCourse(Integer.parseInt(course_id));
+            else if ("edit".equals(type)) {
+                Course course = new Course(){{
+                    course_id = Integer.parseInt(id);
+                    course_number = number;
+                    name = course_name;
+                    location = loc;
+                    description = desc;
+                    professor = prof;
+                }};
+                success = prof.updateCourse(course);
+            }
+            else if ("remove".equals(type)) {
+                success = prof.removeCourse(Integer.parseInt(id));
             }
         }
 

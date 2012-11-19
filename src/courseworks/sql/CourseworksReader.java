@@ -433,7 +433,6 @@ public class CourseworksReader implements ICourseworksReader {
         return events;
     }
 
-
     public List<Announcement> getAnnouncementsForStudent(String student_uni) {
         List<Announcement> anncmnts = new ArrayList<Announcement>();
         Connection conn = null;
@@ -466,5 +465,37 @@ public class CourseworksReader implements ICourseworksReader {
         return anncmnts;
     }
 
+    public HashMap<Integer, HashMap<String, Integer>> getMessageCountByStudentByCourse(String prof_uni) {
+        HashMap<Integer, HashMap<String, Integer>> results = new HashMap<Integer, HashMap<String, Integer>>();
+        Connection conn = null;
+        ResultSet rset = null;
 
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_MESSAGES_BY_STUDENT_COURSE_FOR_PROF);
+            stmt.setString("uni", prof_uni);
+
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                String uni = rset.getString("uni");
+                int course_id = rset.getInt("course_id");
+                int num_messages = rset.getInt("num_messages");
+
+                if (!results.containsKey(course_id)) {
+                    results.put(course_id,  new HashMap<String, Integer>());
+                }
+
+                results.get(course_id).put(uni, num_messages);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return results;
+    }
 }

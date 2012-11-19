@@ -29,6 +29,9 @@ public interface ICourseworksWriter {
     int createCourse(String prof_uni, Course course);
 
     // returns true on success, false on failure
+    boolean updateCourse(String prof_uni, Course course);
+
+    // returns true on success, false on failure
     boolean deleteCourse(String prof_uni, int course_id);
 
     // returns true on success, false on failure

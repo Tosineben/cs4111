@@ -2,6 +2,7 @@ package courseworks.sql;
 
 import courseworks.model.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,4 +50,6 @@ public interface ICourseworksReader {
     List<Event> getEventsForStudent(String student_uni);
 
     List<Announcement> getAnnouncementsForStudent(String student_uni);
+
+    HashMap<Integer, HashMap<String, Integer>> getMessageCountByStudentByCourse(String prof_uni);
 }

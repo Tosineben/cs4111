@@ -113,11 +113,11 @@
                         <td><%=c.course_number%></td>
                         <td><%=c.name%></td>
                         <td><%=c.professor.name%> (<%=c.professor.uni%>)</td>
-                        <td><a href="#model-<%=c.course_id%>" data-toggle="modal">More Info</a></td>
+                        <td><a href="#modal-<%=c.course_id%>" data-toggle="modal">More Info</a></td>
                         <td><a href="#" onclick="return false;" class="add-course" data-course="<%=c.course_id%>">Enroll</a></td>
                     </tr>
 
-                    <div class="modal hide fade" id="model-<%=c.course_id%>">
+                    <div class="modal hide fade" id="modal-<%=c.course_id%>">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h3><%=c.course_number%></h3>
