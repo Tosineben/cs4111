@@ -34,15 +34,21 @@
     <head>
         <title></title>
         <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap-responsive.min.css" />
         <link type="text/css" rel="stylesheet" href="/styles/courseworks.css"/>
     </head>
 
 
     <body>
 
-    <ul id="course_list">
+    <jsp:include page="nav.jsp">
+        <jsp:param name="calendar" value="active" />
+    </jsp:include>
+
+
+    <ul class="nav nav-tabs nav-stacked">
         <% for(Course course : courses){ %>
-            <li class= "<%= course.course_number.replaceAll("\\s","") %>"><%=course.name%></li>
+            <li class= "<%= course.course_number.replaceAll("\\s","") %>"> <a href="#"><%=course.name%></a></li>
         <%}%>
     </ul>
 
@@ -50,8 +56,8 @@
     <div id="announcements">
         <h1>Announcements</h1>
         <% for(Announcement ancmt : announcements){ %>
-            <div class="<%=ancmt.course_number.replaceAll("\\s","")%> <%= ancmt.time_read == null ? "unread" : "read" %>" id= "<%= ancmt.anncmnt_id %>">
-                <h3><%=ancmt.time_posted%></h3>
+            <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%> <%= ancmt.time_read == null ? "unread" : "read" %>" id= "<%= ancmt.anncmnt_id %>">
+                <em><%=ancmt.time_posted%></em>
                 <p><%= ancmt.message %></p>
                 <p><%= ancmt.author %></p>
             </div>
@@ -70,8 +76,8 @@
         %>
 
             <div class="event <%=event.course_number.replaceAll("\\s","")%> cal<%=event.calendar_id%>" id="<%=event.event_id%>">
-                <h2><%=event.title%></h2>
-                <h4><%=event.start%> - <%=event.end%></h4>
+                <h3><%=event.title%></h3>
+                <em><%=event.start%> - <%=event.end%></em>
                 <p><%=event.description%></p>
                 <div class="message-container">
                     <%for(Message msg : messages){%>
@@ -94,4 +100,10 @@
 
 
     </body>
+
+    <!-- scripts here -->
+    <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/scripts/nav.js"></script>
+
 </html>
