@@ -354,14 +354,14 @@ public class CourseworksWriter implements ICourseworksWriter {
     }
 
     @Override
-    public boolean updateCourse(Course course, String prof_uni) throws SecurityException {
+    public boolean updateCourse(Course course) throws SecurityException {
         Connection conn = null;
 
         try {
             conn = _helper.getConnection();
 
-            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_COURSE, course.course_id, prof_uni) == 0) {
-                throw new SecurityException(String.format("professor %s does not have permission to udpate course %d", prof_uni, course.course_id));
+            if (_helper.executeScalar(conn, WriterQueries.Validation.CAN_EDIT_COURSE, course.course_id, course.professor.uni) == 0) {
+                throw new SecurityException(String.format("professor %s does not have permission to udpate course %d", course.professor.uni, course.course_id));
             }
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.UPDATE_COURSE);
@@ -396,7 +396,6 @@ public class CourseworksWriter implements ICourseworksWriter {
 
             CallableStatement stmt = conn.prepareCall(WriterQueries.DELETE_COURSE);
             stmt.setInt("course_id", course_id);
-            stmt.setString("uni", prof_uni);
             stmt.executeUpdate();
         }
         catch (SQLException e) {

@@ -22,13 +22,13 @@ public class Professor {
 
     public boolean updateCourse(Course course) {
         ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.updateCourse(course, uni);
+        course.professor = this;
+        return wtr.updateCourse(course);
     }
 
     public boolean removeCourse(int course_id) {
         ICourseworksWriter wtr = new CourseworksWriter();
         return wtr.deleteCourse(course_id, uni);
     }
-
 }
 

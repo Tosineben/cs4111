@@ -126,7 +126,6 @@
         title = "John's Office Hours"; start = startT.getTime(); end = endT.getTime(); location = "Mudd TA Room"; description = "Weekly office hours, ask any questions";
     }});
     assertTrue(newEventId > 0, "failed to create event");
-
 %>
 
 <!-- document and message tests -->
@@ -142,7 +141,29 @@
         message = "Are you going to review the lecture?"; author = newStudent;
     }});
     assertTrue(newMessageId > 0, "failed to create message");
+%>
 
+<!-- clean up tests -->
+<%
+    // delete announcement
+    shouldBeTrue = wrt.deleteAnnouncement(newAnncmntId, newProfUni);
+    assertTrue(shouldBeTrue, "prof cant delete anncmnt");
+
+    // delete document
+    shouldBeTrue = wrt.deleteDocument(newDocumentId, newProfUni);
+    assertTrue(shouldBeTrue, "prof cant delete doc");
+
+    // delete event
+    shouldBeTrue = wrt.deleteEvent(newEventId, newProfUni);
+    assertTrue(shouldBeTrue, "prof cant delete event");
+
+    // delete calendar
+    shouldBeTrue = wrt.deleteCalendar(newCalendarId, newProfUni);
+    assertTrue(shouldBeTrue, "prof cant delete calendar");
+
+    // delete coruse
+    shouldBeTrue = wrt.deleteCourse(newCourseId, newProfUni);
+    assertTrue(shouldBeTrue, "prof cant delete course");
 %>
 
 <html>

@@ -35,7 +35,7 @@ public final class WriterQueries {
             "values (:anncmnt_id, :course_id, :message, :time_posted)";
 
     public static final String DELETE_ANNCMNT =
-            "delete from Announcements a" +
+            "delete from Announcements a " +
             "where a.anncmnt_id = :anncmnt_id";
 
 
@@ -135,7 +135,7 @@ public final class WriterQueries {
                 "select count(c.uni) " +
                 "from Courses c " +
                 "inner join Announcements a on a.course_id = c.course_id " +
-                "where a.anncmnt_id = :anncmnt_id" +
+                "where a.anncmnt_id = :anncmnt_id " +
                 "and c.uni = :uni";
 
         public static final String CAN_EDIT_CALENDAR =

@@ -32,7 +32,7 @@ public interface ICourseworksWriter {
 
     // returns new course_id, 0 on failure
     int createCourse(Course course);
-    boolean updateCourse(Course course, String prof_uni);
+    boolean updateCourse(Course course);
     boolean deleteCourse(int course_id, String prof_uni);
 
     boolean enrollStudentInCourse(String uni, int course_id);
