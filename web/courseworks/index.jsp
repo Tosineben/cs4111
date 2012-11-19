@@ -116,7 +116,7 @@
                 updater: function(item){
                     var dude = allDudes[item];
                     if (dude) {
-                        signin(item, dude.type);
+                        signin(item, dude.name, dude.type);
                     }
                     return '';
                 },
@@ -140,13 +140,18 @@
                        $('#signup-name').val(),
                        $('#signup-type').val());
             });
+            $('#signout').click(function() {
+                $.post('/courseworks/signin');
+                window.location = '/courseworks';
+            });
 
-            function signin(uni, type) {
+            function signin(uni, name, type) {
                 $.ajax({
                     type: 'GET',
                     url: '/courseworks/signin',
                     data: {
                         uni: uni,
+                        name: name,
                         type: type
                     },
                     success: function(resp){

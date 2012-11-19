@@ -29,6 +29,9 @@ public class SigninServlet extends HttpServlet {
 
         boolean succeeded = false;
 
+        request.getSession().setAttribute(SessionKeys.logged_in_student, null);
+        request.getSession().setAttribute(SessionKeys.logged_in_prof, null);
+
         if ("Professor".equals(req_type)) {
             Professor p = new Professor(){{name=req_name; uni=req_uni;}};
 
