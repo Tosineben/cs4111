@@ -28,6 +28,12 @@ public class CoursePageServlet extends HttpServlet {
                 Announcement ancmt = new Announcement();
                 ancmt.anncmnt_id = Integer.parseInt(request.getParameter("announcement_id"));
                 success = ancmt.updateAnncmntRead(student.uni, true);
+                if(success){
+                    pw.print("worked");
+                }
+                else {
+                    response.sendError(500);
+                }
 
             }
             else if("addMessage".equals(type)){
@@ -36,19 +42,19 @@ public class CoursePageServlet extends HttpServlet {
                 msg.message = request.getParameter("message");
                 int event_id = Integer.parseInt(request.getParameter("event_id"));
                 CourseworksWriter wtr = new CourseworksWriter();
-                wtr.createMessage(event_id, msg);
-                success = true;
+                int num = wtr.createMessage(event_id, msg);
+
+                if(num > 0 ){
+                    pw.print("worked");
+                }
+                else{
+                    response.sendError(500);
+                }
 
             }
 
         }
 
-        if(success){
-            pw.print("worked");
-        }
-        else {
-            response.sendError(500);
-        }
 
         pw.close();
 

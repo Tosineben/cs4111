@@ -133,7 +133,7 @@
                                         </dl><%}%>
                                 <%}%>
 
-                                <form method="post" action="/courseworks/coursepage" enctype="addMessage" ur>
+                                <form method="post" action="/courseworks/coursepage" type="addMessage" ur>
                                     <input type="hidden" name="event_id" value="<%=event.event_id%>"/>
                                     <textarea class="input-block-level" name="message" rows="3"></textarea>
                                     <button type="submit" class="btn btn-block">Add a Message</button>
