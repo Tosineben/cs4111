@@ -86,7 +86,10 @@ public final class ReaderQueries {
 
     public static final String GET_MESSAGES_FOR_STUDENT =
             GET_MESSAGES +
-            "where s.uni = :uni " +
+            "inner join Events ev on ev.event_id = m.event_id " +
+            "inner join Calendars ca on ca.calendar_id = ev.calendar_id " +
+            "inner join Enrollment e on e.course_id = ca.course_id " +
+            "where e.uni = :uni " +
             "order by m.time_posted";
 
     public static final String GET_MESSAGES_FOR_EVENT =
