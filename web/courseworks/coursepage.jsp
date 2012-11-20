@@ -139,7 +139,7 @@
                                         </dl><%}%>
                                 <%}%>
 
-                                <form method="post" action="/courseworks/message">
+                                <form class="add-message">
                                     <input type="hidden" name="event_id" value="<%=event.event_id%>"/>
                                     <textarea class="input-block-level" name="message" rows="3"></textarea>
                                     <button type="submit" class="btn btn-block">Add a Message</button>
@@ -165,6 +165,7 @@
     <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/scripts/navigation.js"></script>
+    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -175,7 +176,13 @@
                 cur.parent().toggleClass('active');
             });
 
-
+            $('.add-message').ajaxForm({
+                url: '/courseworks/message',
+                type: 'post',
+                success: function() {
+                    window.location = window.location;
+                }
+            });
 
             $(".close.anc").click(function(){
                 var anc = $(this);

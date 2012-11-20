@@ -86,7 +86,8 @@ public final class ReaderQueries {
 
     public static final String GET_MESSAGES_FOR_STUDENT =
             GET_MESSAGES +
-            "where s.uni = :uni";
+            "where s.uni = :uni " +
+            "order by m.time_posted";
 
     public static final String GET_MESSAGES_FOR_EVENT =
             GET_MESSAGES +
