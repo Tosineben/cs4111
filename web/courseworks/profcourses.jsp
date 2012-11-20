@@ -192,9 +192,9 @@
                                                 </div>
                                             </div>
                                             <div class="control-group">
-                                                <label class="control-label" for="edit-event-desc-<%=ca.calendar_id%>">Description</label>
+                                                <label class="control-label" for="add-event-desc-<%=ca.calendar_id%>">Description</label>
                                                 <div class="controls">
-                                                    <textarea id="edit-event-desc-<%=ca.calendar_id%>" class="input-xlarge" rows="5" placeholder="We will review this week's lecture notes and return your midterm exams."></textarea>
+                                                    <textarea id="add-event-desc-<%=ca.calendar_id%>" class="input-xlarge" rows="5" placeholder="We will review this week's lecture notes and return your midterm exams."></textarea>
                                                 </div>
                                             </div>
                                             <div class="form-actions">

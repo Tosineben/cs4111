@@ -25,7 +25,7 @@
 
     HashMap<Integer, List<Student>> studentsByCourse = new HashMap<Integer, List<Student>>();
     for (Course c : currentCourses) {
-        studentsByCourse.put(c.course_id, c.getStudents());
+        studentsByCourse.put(c.course_id, rdr.getStudentsForCourse(c.course_id));
     }
 
     String deleteDisabled = null;

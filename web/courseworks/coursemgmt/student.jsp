@@ -20,7 +20,7 @@
     ICourseworksReader rdr = new CourseworksReader();
 
     List<Course> notEnrolled = new ArrayList<Course>();
-    List<Course> enrolled = student.getCourses();
+    List<Course> enrolled = rdr.getCoursesForStudent(student.uni);
 
     HashSet<Integer> enrollend_course_ids = new HashSet<Integer>();
     for (Course c : enrolled) {

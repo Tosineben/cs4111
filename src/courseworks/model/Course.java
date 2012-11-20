@@ -15,30 +15,5 @@ public class Course {
     public Professor professor;
     public List<Calendar> calendars;
 
-    public List<Student> getStudents() {
-        ICourseworksReader rdr = new CourseworksReader();
-        return rdr.getStudentsForCourse(course_id);
-    }
-
-    public List<Announcement> getAnnouncements() {
-        ICourseworksReader rdr = new CourseworksReader();
-        return rdr.getAnnouncementsForCourse(course_id);
-    }
-
-    public Map<String, Calendar> getCalendarsByName() {
-        ICourseworksReader rdr = new CourseworksReader();
-        return rdr.getCalendarsForCourse(course_id);
-    }
-
-    public int addCalendar(Calendar cal) {
-        ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.createCalendar(course_id, cal, professor.uni);
-    }
-
-    public int addAnnouncement(Announcement anncmnt) {
-        ICourseworksWriter wtr = new CourseworksWriter();
-        return wtr.createAnnouncement(course_id, anncmnt, professor.uni);
-    }
-
 }
 
