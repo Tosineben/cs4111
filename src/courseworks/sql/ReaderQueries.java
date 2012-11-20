@@ -134,7 +134,7 @@ public final class ReaderQueries {
     //TODO remove either course_name or course_number from query
     public static final String GET_ANNOUNCEMENTS_FOR_STUDENT =
             "SELECT A.anncmnt_id, A.message, A.time_posted, " +
-                    "P.name AS author, C.name AS course_name, Ra.time_read, C.courseNumber as course_number " +
+                    "P.name AS author, Ra.time_read, C.course_id " +
             "FROM Enrollment E " +
                     "INNER JOIN Announcements A ON A.course_id = E.course_id " +
                     "INNER JOIN Courses C ON C.course_id = E.course_id " +

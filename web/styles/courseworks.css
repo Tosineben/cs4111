@@ -26,6 +26,10 @@ input {
     border-radius: 4px;
 }
 
+.event p{
+    margin: 0px;
+}
+
 
 
 .navbar {
