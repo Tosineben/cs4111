@@ -44,6 +44,9 @@ public interface ICourseworksReader {
     // returns a list of calendars for course
     List<Calendar> getCalendarListForCourse(int course_id);
 
+    Map<Integer, List<Calendar>> getCalendarsForProf(String prof_uni);
+    Map<Integer, Map<Integer, List<Event>>> getEventsForProf(String prof_uni);
+
     // returns messages for event
     List<Message> getMessagesForEvent(int event_id);
 
