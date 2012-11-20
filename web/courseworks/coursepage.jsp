@@ -180,7 +180,7 @@
                 url: '/courseworks/message',
                 type: 'post',
                 success: function() {
-                    window.location = window.location.href;
+                    window.location = window.location.href.split('#')[0];
                 }
             });
 
