@@ -5,6 +5,7 @@
 <%@ page import="java.util.Collections" %>
 <%@ page import="courseworks.SessionKeys" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -34,6 +35,8 @@
 
     Collections.sort(announcements, new AnnouncementComperator());
     Collections.sort(events, new EventComperator());
+    Map<Integer, String> course_id_to_name = new HashMap<Integer, String>();
+    Map<Integer, String> cal_id_to_name = new HashMap<Integer, String>();
 %>
 
 <!DOCTYPE html>
@@ -58,11 +61,12 @@
             <div class="span3">
                 <ul class="nav nav-list well">
                     <% for(Course course : courses){
-                        String course_id = Integer.toString(course.course_id);
+                        course_id_to_name.put(course.course_id, course.name);
                     %>
 
-                        <li class= "nav-header c<%= course_id%>"><%=course.name%></li>
-                        <%for (Calendar cal : course.calendars){%>
+                        <li class= "nav-header c<%= course.course_id%> <%= course.course_number.replaceAll("\\s","")%>"><%=course.name%></li>
+                        <%for (Calendar cal : course.calendars){
+                        cal_id_to_name.put(cal.calendar_id, cal.name);%>
                         <li class="active"><a class="cal<%=cal.calendar_id%>" href="#"><%=cal.name%></a></li>
                         <%}%>
                     <%}%>
@@ -75,7 +79,7 @@
                 <% for(Announcement ancmt : announcements){
                     if(ancmt.time_read == null){%>
                     <div class="announcement c<%=ancmt.course_id%>" >
-                        <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close anc" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
+                        <div class="announcement-title"> <%=course_id_to_name.get(ancmt.course_id)%>: <%= ancmt.author %>  <button type="button" class="close anc" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
                         <div class="announcement-content">
                             <p><%= ancmt.message %></p>
                         </div>
