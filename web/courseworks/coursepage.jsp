@@ -89,7 +89,7 @@
                 <%}}%>
             </div>
 
-            <div id="Calendar">
+            <div id="Calendar" style="padding-top:40px;">
                 <h1>Events</h1>
                 <%
                     List<Message> messages;
