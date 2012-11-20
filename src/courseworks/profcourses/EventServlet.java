@@ -41,28 +41,35 @@ public class EventServlet extends HttpServlet {
 
         boolean succeeded = false;
 
-        if (type == RequestType.ReqType.Add) {
-            succeeded = wtr.createEvent(Integer.parseInt(r_calendar_id),
-                    new Event() {{
+        if (type == RequestType.ReqType.Delete) {
+            succeeded = wtr.deleteEvent(Integer.parseInt(r_event_id), prof.uni);
+        }
+        else {
+            final Date startd = parseDate(r_start);
+            final Date endd = parseDate(r_end);
+
+            if (startd.getTime() != myDate.getTime() && endd.getTime() != myDate.getTime()) {
+                if (type == RequestType.ReqType.Add) {
+                    succeeded = wtr.createEvent(Integer.parseInt(r_calendar_id),
+                            new Event() {{
+                                title = r_title;
+                                description = r_description;
+                                location = r_location;
+                                start = startd;
+                                end = endd;
+                            }}, prof.uni) > 0;
+                }
+                else if (type == RequestType.ReqType.Update) {
+                    succeeded = wtr.updateEvent(new Event() {{
+                        event_id = Integer.parseInt(r_event_id);
                         title = r_title;
                         description = r_description;
                         location = r_location;
-                        start = parseDate(r_start);
-                        end = parseDate(r_end);
-                    }}, prof.uni) > 0;
-        }
-        else if (type == RequestType.ReqType.Update) {
-            succeeded = wtr.updateEvent(new Event() {{
-                event_id = Integer.parseInt(r_event_id);
-                title = r_title;
-                description = r_description;
-                location = r_location;
-                start = parseDate(r_start);
-                end = parseDate(r_end);
-            }}, prof.uni);
-        }
-        else if (type == RequestType.ReqType.Delete) {
-            succeeded = wtr.deleteEvent(Integer.parseInt(r_event_id), prof.uni);
+                        start = startd;
+                        end = endd;
+                    }}, prof.uni);
+                }
+            }
         }
 
         if (!succeeded){
@@ -75,13 +82,14 @@ public class EventServlet extends HttpServlet {
 
     }
 
+    private Date myDate = new Date();
+
     private Date parseDate(String d) {
-        SimpleDateFormat dateParser = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         try {
-            return dateParser.parse(d);
+            return new SimpleDateFormat("MM/dd/yyyy hh:mm aa").parse(d);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return new Date();
+        return myDate;
     }
 }

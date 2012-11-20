@@ -102,7 +102,8 @@ public final class ReaderQueries {
                     "from Events ev " +
                     "inner join Calendars cal on cal.calendar_id = ev.calendar_id " +
                     "inner join Courses c on c.course_id = cal.course_id " +
-                    "where c.uni = :uni";
+                    "where c.uni = :uni " +
+                    "order by ev.startTime";
 
     public static final String GET_EVENTS_FOR_STUDENT =
             "select ev.title, ev.event_id, ev.startTime as start_time, ev.endTime as end_time, ev.description, " +

@@ -27,6 +27,16 @@
     Map<Integer, List<Calendar>> calendarsByCourse = rdr.getCalendarsForProf(prof.uni);
     List<Course> currentCourses = prof.getCourses();
 
+    List<Event> events = new ArrayList<Event>();
+
+    for (Map<Integer, List<Event>> tmp: eventsByCalByCourse.values()) {
+        for(List<Event> tmp2: tmp.values()) {
+            for(Event ev: tmp2) {
+                events.add(ev);
+            }
+        }
+    }
+
     String deleteDisabled = null;
     String deleteTitle = null;
 
@@ -82,8 +92,8 @@
                         <div class="tab-pane" id="tab-<%=c.course_id%>">
 
                             <div class="pull-right">
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#modal-anncmnts-<%=c.course_id%>" data-toggle="modal">Announcements</a></li>
+                                <ul class="nav nav-pills">
+                                    <li><a href="#modal-anncmnts-<%=c.course_id%>" data-toggle="modal">Manage Announcements</a></li>
                                     <li><a href="#modal-add-calendar-<%=c.course_id%>" data-toggle="modal">Add Calendar</a></li>
                                 </ul>
                             </div>
@@ -97,28 +107,8 @@
                                 }
                             %>
 
-                                <div class="modal hide fade" id="modal-edit-calendar-<%=ca.calendar_id%>">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h3>Edit Calendar for <%=c.course_number%></h3>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="form-horizontal">
-                                        <div class="control-group">
-                                            <label class="control-label" for="edit-calendar-name-<%=ca.calendar_id%>">Name</label>
-                                            <div class="controls">
-                                                <input class="input-xlarge" type="text" id="edit-calendar-name-<%=ca.calendar_id%>" value="<%=ca.name%>">
-                                            </div>
-                                        </div>
-                                        <div class="form-actions">
-                                            <button type="submit" class="btn btn-primary edit-calendar-submit" data-calendarid="<%=ca.calendar_id%>" onclick="return false;">Submit</button>
-                                            <a class="btn btn-danger delete-calendar" style="margin-left:10px;" data-calendarid="<%=ca.calendar_id%>" href="#" onclick="return false"><i class="icon-trash icon-white"></i> Delete Calendar</a>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+                                <div class="prof-calendar" style="padding-top:20px;">
 
-                                <div>
                                     <h3>
                                         <span id="cal-name-<%=ca.calendar_id%>"><%=ca.name%></span>
                                         <a href="#modal-edit-calendar-<%=ca.calendar_id%>" data-toggle="modal">
@@ -126,11 +116,108 @@
                                         </a>
                                     </h3>
 
+                                    <% if(!eventsByCalByCourse.get(c.course_id).get(ca.calendar_id).isEmpty()) { %>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width:200px;">Title</th>
+                                                    <th style="min-width:200px;">Start</th>
+                                                    <th style="min-width:200px;">End</th>
+                                                    <th style="min-width:200px;">Location</th>
+                                                    <th style="min-width:50px;">Edit</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <% for(Event ev : eventsByCalByCourse.get(c.course_id).get(ca.calendar_id)) { %>
+                                            <tr id="event-row-<%=ev.event_id%>">
+                                                <td><%=ev.title%></td>
+                                                <td><%=anncmntDateFmt.format(ev.start)%></td>
+                                                <td><%=anncmntDateFmt.format(ev.end)%></td>
+                                                <td><%=ev.location%></td>
+                                                <td>
+                                                    <a href="#modal-event-<%=ev.event_id%>" data-toggle="modal">
+                                                        <i class="icon-pencil"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                                            </tbody>
+                                        </table>
+                                    <% } %>
+
+                                    <div>
+                                        <a href="#modal-add-event-<%=ca.calendar_id%>" data-toggle="modal">
+                                            Add Event <%=ca.name%>
+                                        </a>
+                                    </div>
+
                                 </div>
 
-                                <% for(Event ev : eventsByCalByCourse.get(c.course_id).get(ca.calendar_id)) { %>
+                                <div class="modal hide fade" id="modal-add-event-<%=ca.calendar_id%>">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h3>New Event</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div class="control-group">
+                                                <label class="control-label" for="add-event-title-<%=ca.calendar_id%>">Title</label>
+                                                <div class="controls">
+                                                    <input class="input-xlarge" type="text" id="add-event-title-<%=ca.calendar_id%>" placeholder="John's Office Hours">
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label" for="add-event-start-<%=ca.calendar_id%>">Start</label>
+                                                <div class="controls">
+                                                    <input class="input-xlarge" type="text" id="add-event-start-<%=ca.calendar_id%>" placeholder="12/10/2012 10:00 AM">
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label" for="add-event-end-<%=ca.calendar_id%>">End</label>
+                                                <div class="controls">
+                                                    <input class="input-xlarge" type="text" id="add-event-end-<%=ca.calendar_id%>" placeholder="12/10/2012 11:30 AM">
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label" for="add-event-location-<%=ca.calendar_id%>">Location</label>
+                                                <div class="controls">
+                                                    <input class="input-xlarge" type="text" id="add-event-location-<%=ca.calendar_id%>" placeholder="Mudd TA Room">
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label" for="edit-event-desc-<%=ca.calendar_id%>">Description</label>
+                                                <div class="controls">
+                                                    <textarea id="edit-event-desc-<%=ca.calendar_id%>" class="input-xlarge" rows="5" placeholder="We will review this week's lecture notes and return your midterm exams."></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn btn-primary add-event-submit" data-calendarid="<%=ca.calendar_id%>" onclick="return false;">Submit</button>
+                                                <button class="btn" data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
-                                <% } %>
+                                <div class="modal hide fade" id="modal-edit-calendar-<%=ca.calendar_id%>">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h3>Edit Calendar for <%=c.course_number%></h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-horizontal">
+                                            <div class="control-group">
+                                                <label class="control-label" for="edit-calendar-name-<%=ca.calendar_id%>">Name</label>
+                                                <div class="controls">
+                                                    <input class="input-xlarge" type="text" id="edit-calendar-name-<%=ca.calendar_id%>" value="<%=ca.name%>">
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <button type="submit" class="btn btn-primary edit-calendar-submit" data-calendarid="<%=ca.calendar_id%>" onclick="return false;">Submit</button>
+                                                <a class="btn btn-danger delete-calendar" style="margin-left:10px;" data-calendarid="<%=ca.calendar_id%>" href="#" onclick="return false"><i class="icon-trash icon-white"></i> Delete Calendar</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
                             <% } %>
 
@@ -138,6 +225,55 @@
                     <% } %>
                 </div>
             </div>
+
+            <% for(Event ev : events) { %>
+
+                <div class="modal hide fade" id="modal-event-<%=ev.event_id%>">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>Edit Event</h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label" for="edit-event-title-<%=ev.event_id%>">Title</label>
+                                <div class="controls">
+                                    <input class="input-xlarge" type="text" id="edit-event-title-<%=ev.event_id%>" value="<%=ev.title%>">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="edit-event-start-<%=ev.event_id%>">Start</label>
+                                <div class="controls">
+                                    <input class="input-xlarge" type="text" id="edit-event-start-<%=ev.event_id%>" value="<%=anncmntDateFmt.format(ev.start)%>">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="edit-event-end-<%=ev.event_id%>">End</label>
+                                <div class="controls">
+                                    <input class="input-xlarge" type="text" id="edit-event-end-<%=ev.event_id%>" value="<%=anncmntDateFmt.format(ev.end)%>">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="edit-event-location-<%=ev.event_id%>">Location</label>
+                                <div class="controls">
+                                    <input class="input-xlarge" type="text" id="edit-event-location-<%=ev.event_id%>" value="<%=ev.location%>">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="edit-event-desc-<%=ev.event_id%>">Description</label>
+                                <div class="controls">
+                                    <textarea id="edit-event-desc-<%=ev.event_id%>" class="input-xlarge" rows="5"><%=ev.description%></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary edit-event-submit" data-eventid="<%=ev.event_id%>" onclick="return false;">Submit</button>
+                                <a class="btn btn-danger delete-event" style="margin-left:10px;" data-eventid="<%=ev.event_id%>" href="#" onclick="return false"><i class="icon-trash icon-white"></i> Delete Event</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            <% } %>
 
             <%
             for(Course c : currentCourses) {
@@ -175,7 +311,7 @@
                                             <i class="icon-trash"></i>
                                         </a>
                                         <a href="#" onclick="return false;" class="edit-anncmnt-ok" style="display:none;">
-                                            <i class="icon-ok-circle"></i>
+                                            <i class="icon-check"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -188,7 +324,7 @@
                                 </td>
                                 <td>
                                     <a href="#" onclick="return false;" class="add-anncmnt-ok" data-course-id="<%=c.course_id%>">
-                                        <i class="icon-ok-circle"></i>
+                                        <i class="icon-check"></i>
                                     </a>
                                     <a href="#" onclick="return false;" class="add-anncmnt-cancel">
                                         <i class="icon-ban-circle"></i>
@@ -198,7 +334,6 @@
                         </table>
                         <div>
                             <a href="#" onclick="return false;" class="add-anncmnt" data-course-id="<%=c.course_id%>">
-                                <i class="icon-check"></i>
                                 Add New Announcement
                             </a>
                         </div>
@@ -236,7 +371,6 @@
 <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
 <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
 <script type="text/javascript" src="/scripts/navigation.js"></script>
-<script type="text/javascript" src="/scripts/moment.js"></script>
 <script type="text/javascript">
     (function(){
 
@@ -245,6 +379,39 @@
             if (firstTab.length > 0) {
                 firstTab.children('a').click();
             }
+
+            $('.edit-event-submit').click(function(){
+                var event_id = $(this).data('eventid');
+                var title = $('#edit-event-title-' + event_id).val();
+                var start = $('#edit-event-start-' + event_id).val();
+                var end = $('#edit-event-end-' + event_id).val();
+                var location = $('#edit-event-location-' + event_id).val();
+                var desc = $('#edit-event-desc-' + event_id).val();
+                updateEvent(event_id, title, start, end, desc, location);
+            });
+
+            $('.add-event-submit').click(function() {
+                var calendar_id = $(this).data('calendarid');
+                var title = $('#add-event-title-' + calendar_id).val();
+                var start = $('#add-event-start-' + calendar_id).val();
+                var end = $('#add-event-end-' + calendar_id).val();
+                var location = $('#add-event-location-' + calendar_id).val();
+                var desc = $('#add-event-desc-' + calendar_id).val();
+                addEvent(calendar_id, title, start, end, desc, location);
+            });
+
+            $('.delete-event').click(function(){
+                var event_id = $(this).data('eventid');
+                deleteEvent(event_id);
+            });
+
+            $('#show-future-events').click(function () {
+                $($(this).data('target')).toggle('slow');
+            });
+
+            $('#show-past-events').click(function () {
+                $($(this).data('target')).toggle('slow');
+            });
 
             $('.add-calendar-submit').click(function(){
                 var course = $(this).data('courseid');
@@ -300,8 +467,6 @@
             });
 
         });
-
-        // dates must be in format yyyy/MM/dd HH:mm:ss
 
         function addAnnouncment(course_id, message) {
             $.ajax({
@@ -380,7 +545,7 @@
                     window.location = window.location;
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('We were unable to save this event. Please enter dates in the format 12/25/2012 11:45 am.');
                 }
             });
         }
@@ -394,10 +559,11 @@
                     event_id: event_id
                 },
                 success: function(){
+                    $('#event-row-' + event_id).remove();
                     window.location = window.location;
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('Oops, we could not delete this event, please try again');
                 }
             });
         }
@@ -419,7 +585,7 @@
                     window.location = window.location;
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('We were unable to save this event. Please enter dates in the format 12/25/2012 11:45 am.');
                 }
             });
         }
