@@ -60,6 +60,9 @@
     <div class="wrapper">
 
         <div class="row-fluid">
+
+            <% if(!courses.isEmpty()) { %>
+
             <div class="span3">
                 <ul class="nav nav-list well">
                     <% for(Course course : courses){
@@ -94,7 +97,10 @@
                     </div>
                 </div>
                 <%}}%>
-                <button class="btn btn-large btn-block" id="ancmt-toggle" type="button">Toggle Read Announcements</button>
+
+                <% if(!announcements.isEmpty()) { %>
+                    <button class="btn btn-large btn-block" id="ancmt-toggle" type="button">Toggle Read Announcements</button>
+                <% }%>
             </div>
 
             <div id="Calendar" style="padding-top:40px;">
@@ -123,9 +129,8 @@
                             </div>
                             <br>
                             <div class="modal-body">
-                                <p><%=event.description%></p>
+                                <p><strong>Description: </strong> <%=event.description%></p>
                                 <br>
-
                                 <p><strong>Time: </strong> <%=dateFmt.format(event.start)%> to <%=dateFmt.format(event.end)%> </p>
                                 <p><strong>Location:</strong> <%=event.location%></p>
                                 <br>
@@ -163,6 +168,16 @@
                 <%}%>
             </div>
           </div>
+
+            <% } else { %>
+
+            <p class="lead">
+                It looks like you aren't enrolled in any courses yet.
+                You can add courses <a href="/courseworks/coursemgmt/student.jsp">here</a>.
+            </p>
+
+            <% } %>
+
         </div>
    </div>
 
