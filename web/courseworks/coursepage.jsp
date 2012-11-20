@@ -165,7 +165,7 @@
     <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="/scripts/navigation.js"></script>
-    <script type="text/javascript" src="http://malsup.github.com/jquery.form.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.form.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
