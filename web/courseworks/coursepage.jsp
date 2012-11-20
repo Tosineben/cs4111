@@ -4,6 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="courseworks.SessionKeys" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -62,7 +63,7 @@
 
                         <li class= "nav-header c<%= course_id%>"><%=course.name%></li>
                         <%for (Calendar cal : course.calendars){%>
-                        <li><a class="cal<%=cal.calendar_id%>" href="#"><%=cal.name%></a></li>
+                        <li class="active"><a class="cal<%=cal.calendar_id%>" href="#"><%=cal.name%></a></li>
                         <%}%>
                     <%}%>
                 </ul>
@@ -73,7 +74,7 @@
                 <h1>Announcements</h1>
                 <% for(Announcement ancmt : announcements){
                     if(ancmt.time_read == null){%>
-                    <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" >
+                    <div class="announcement c<%=ancmt.course_id%>" >
                         <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close anc" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
                         <div class="announcement-content">
                             <p><%= ancmt.message %></p>
@@ -86,8 +87,10 @@
                 <h1>Events</h1>
                 <%
                     List<Message> messages;
+                    Map<String, Document> documents;
                     for(Event event : events){
                         messages = rdr.getMessagesForEvent(event.event_id);
+                        documents = rdr.getDocumentsForEvent(event.event_id);
                  %>
 
                     <div class="event cal<%=event.calendar_id%>">
@@ -105,14 +108,35 @@
                             <br>
                             <div class="modal-body">
                                 <p><%=event.description%></p>
-                                <%for(Message msg : messages){%>
-                                <dl class="dl-horizontal">
-                                    <dt><%=msg.author.name%>:</dt>
-                                    <dd><%=msg.message%></dd>
-                                </dl><%}%>
+                                <br>
+
+                                <p><strong>Time: </strong> <%=event.start%> to <%=event.end%> </p>
+                                <p><strong>Location:</strong> <%=event.location%></p>
+                                <br>
+
+                                <%if(!documents.isEmpty()){%>
+                                    <h4>Documents:</h4>
+                                    <%for(String key: documents.keySet()){%>
+                                       <ul>
+                                           <li><a href="<%=key%>"><%=key%></a></li>
+                                       </ul>
+                                <%}} %>
+
+
+
+                                 <%if(!messages.isEmpty()){%>
+                                    <h4>Messages:</h4>
+                                        <%for(Message msg : messages){%>
+                                        <dl class="dl-horizontal">
+                                            <dt><%=msg.author.name%>:</dt>
+                                            <dd><%=msg.message%></dd>
+                                        </dl><%}%>
+                                <%}%>
+
                                 <form method="post" action="/courseworks/coursepage" enctype="addMessage" ur>
-                                    <textarea class="input-block-level" rows="3"></textarea>
-                                    <button type="submit" class="btn btn-block">Add a Comment</button>
+                                    <input type="hidden" name="event_id" value="<%=event.event_id%>"/>
+                                    <textarea class="input-block-level" name="message" rows="3"></textarea>
+                                    <button type="submit" class="btn btn-block">Add a Message</button>
                                 </form>
 
                             </div>
@@ -141,13 +165,15 @@
 
             $('.nav.nav-list a').click(function(){
                 var cur = $(this);
-             $('.event.' + cur.attr("class")).fadeToggle("slow", "linear");
+             $('.event.' + cur.attr("class").split(" ")[0]).fadeToggle("slow", "linear");
+                cur.parent().toggleClass('active');
             });
 
 
 
             $(".close.anc").click(function(){
-                var ancmt_id = $(this).data("id");
+                var anc = $(this);
+                var ancmt_id = anc.data("id");
 
                 $.ajax({
                     type: 'POST',
@@ -157,18 +183,13 @@
                         type: 'read'
                     },
                     success: function(){
-                        $(this).parent().parent().hide();
+                        anc.parent().parent().hide();
                     },
                     error: function(){
                         alert('Sorry, we couldn\'t mark it read')
                     }
                 });
-
-
-
-
-
-            });
+});
         });
 
     </script>

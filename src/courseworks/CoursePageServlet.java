@@ -1,7 +1,9 @@
 package courseworks;
 
 import courseworks.model.Announcement;
+import courseworks.model.Message;
 import courseworks.model.Student;
+import courseworks.sql.CourseworksWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,14 +30,21 @@ public class CoursePageServlet extends HttpServlet {
                 success = ancmt.updateAnncmntRead(student.uni, true);
 
             }
-            if("addMessage".equals(type)){
-                pw.write(5);
+            else if("addMessage".equals(type)){
+                Message msg = new Message();
+                msg.author = student;
+                msg.message = request.getParameter("message");
+                int event_id = Integer.parseInt(request.getParameter("event_id"));
+                CourseworksWriter wtr = new CourseworksWriter();
+                wtr.createMessage(event_id, msg);
+                success = true;
+
             }
 
         }
 
         if(success){
-            pw.write("/courseworks/coursepage.jsp");
+            pw.print("worked");
         }
         else {
             response.sendError(500);
