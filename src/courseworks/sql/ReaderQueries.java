@@ -49,6 +49,10 @@ public final class ReaderQueries {
             GET_ANNCMNTS +
             "where a.course_id = :course_id";
 
+    public static final String GET_ANNCMNTS_FOR_PROF =
+            GET_ANNCMNTS +
+            "inner join Courses c on c.course_id = a.course_id " +
+            "where c.uni = :uni";
 
     public static final String GET_READ_ANNCMNTS =
             "select a.anncmnt_id, a.course_id, a.message, a.time_posted, s.uni, s.name, ra.time_read " +

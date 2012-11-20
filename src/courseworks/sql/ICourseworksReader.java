@@ -32,6 +32,9 @@ public interface ICourseworksReader {
     // returns announcements for course
     List<Announcement> getAnnouncementsForCourse(int course_id);
 
+    // returns announcements for professor
+    Map<Integer, List<Announcement>> getAnnouncementsForProf(String prof_uni);
+
     // returns student+time_read for students that have read announcement
     List<ReadAnnouncment> getStudentsReadForAnnouncment(int anncmnt_id);
 

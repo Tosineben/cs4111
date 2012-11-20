@@ -169,9 +169,9 @@ public class CourseworksReader implements ICourseworksReader {
                 Event event = new Event();
                 event.event_id = rset.getInt("event_id");
                 event.description = rset.getString("description");
-                event.end = rset.getDate("endTime");
+                event.end = rset.getTimestamp("endTime");
                 event.location = rset.getString("location");
-                event.start = rset.getDate("startTime");
+                event.start = rset.getTimestamp("startTime");
                 event.title = rset.getString("title");
                 events.add(event);
             }
@@ -202,7 +202,7 @@ public class CourseworksReader implements ICourseworksReader {
                 Announcement anncmnt = new Announcement();
                 anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
                 anncmnt.message = rset.getString("message");
-                anncmnt.time_posted = rset.getDate("time_posted");
+                anncmnt.time_posted = rset.getTimestamp("time_posted");
                 anncmnts.add(anncmnt);
             }
         }
@@ -214,6 +214,40 @@ public class CourseworksReader implements ICourseworksReader {
         }
 
         return anncmnts;
+    }
+
+    @Override
+    public Map<Integer, List<Announcement>> getAnnouncementsForProf(String prof_uni) {
+        Map<Integer, List<Announcement>> anncmntsByCourse = new HashMap<Integer, List<Announcement>>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_ANNCMNTS_FOR_PROF);
+            stmt.setString("uni", prof_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                int course_id = rset.getInt("course_id");
+                if (!anncmntsByCourse.containsKey(course_id)) {
+                    anncmntsByCourse.put(course_id, new ArrayList<Announcement>());
+                }
+                Announcement anncmnt = new Announcement();
+                anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
+                anncmnt.message = rset.getString("message");
+                anncmnt.time_posted = rset.getTimestamp("time_posted");
+                anncmntsByCourse.get(course_id).add(anncmnt);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return anncmntsByCourse;
     }
 
     @Override
@@ -230,13 +264,13 @@ public class CourseworksReader implements ICourseworksReader {
 
             while (rset.next()) {
                 ReadAnnouncment ra = new ReadAnnouncment();
-                ra.time_read = rset.getDate("time_read");
+                ra.time_read = rset.getTimestamp("time_read");
                 ra.student = new Student();
                 ra.student.uni = rset.getString("uni");
                 ra.student.name = rset.getString("name");
                 ra.anncmnt = new Announcement();
                 ra.anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
-                ra.anncmnt.time_posted = rset.getDate("time_posted");
+                ra.anncmnt.time_posted = rset.getTimestamp("time_posted");
                 ra.anncmnt.message = rset.getString("message");
                 ras.add(ra);
             }
@@ -325,7 +359,7 @@ public class CourseworksReader implements ICourseworksReader {
                 Message msg = new Message();
                 msg.message = rset.getString("message");
                 msg.message_id = rset.getInt("message_id");
-                msg.time_posted = rset.getDate("time_posted");
+                msg.time_posted = rset.getTimestamp("time_posted");
                 msg.author = new Student();
                 msg.author.uni = rset.getString("uni");
                 msg.author.name = rset.getString("name");
@@ -416,9 +450,9 @@ public class CourseworksReader implements ICourseworksReader {
                 Event event = new Event();
                 event.event_id = rset.getInt("event_id");
                 event.description = rset.getString("description");
-                event.end = rset.getDate("end_time");
+                event.end = rset.getTimestamp("end_time");
                 event.location = rset.getString("location");
-                event.start = rset.getDate("start_time");
+                event.start = rset.getTimestamp("start_time");
                 event.title = rset.getString("title");
                 event.course_id = rset.getInt("course_id");
                 event.calendar_id = rset.getInt("calendar_id");
@@ -490,10 +524,10 @@ public class CourseworksReader implements ICourseworksReader {
                 Announcement anncmnt = new Announcement();
                 anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
                 anncmnt.message = rset.getString("message");
-                anncmnt.time_posted = rset.getDate("time_posted");
-                anncmnt.course_id = rset.getInt("course_id");
+                anncmnt.time_posted = rset.getTimestamp("time_posted");
+                anncmnt.course_number = rset.getString("course_number");
                 anncmnt.author = rset.getString("author");
-                anncmnt.time_read = rset.getDate("time_read");
+                anncmnt.time_read = rset.getTimestamp("time_read");
                 anncmnts.add(anncmnt);
             }
         }
