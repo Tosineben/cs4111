@@ -90,7 +90,7 @@ public final class ReaderQueries {
 
     public static final String GET_EVENTS_FOR_STUDENT =
             "select ev.title, ev.event_id, ev.startTime as start_time, ev.endTime as end_time, ev.description, " +
-                    "ev.location, c.courseNumber as course_number, cal.calendar_id " +
+                    "ev.location, c.course_id, cal.calendar_id " +
             "from Events ev " +
                     "inner join Calendars cal on cal.calendar_id = ev.calendar_id " +
                     "inner join Enrollment e on e.course_id = cal.course_id " +

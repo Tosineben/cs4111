@@ -279,6 +279,7 @@ public class CourseworksReader implements ICourseworksReader {
         return cals;
     }
 
+
     public List<Calendar> getCalendarListForCourse(int course_id) {
         List<Calendar> cals = new ArrayList<Calendar>();
         Connection conn = null;
@@ -418,7 +419,7 @@ public class CourseworksReader implements ICourseworksReader {
                 event.location = rset.getString("location");
                 event.start = rset.getDate("start_time");
                 event.title = rset.getString("title");
-                event.course_number = rset.getString("course_number");
+                event.course_id = rset.getInt("course_id");
                 event.calendar_id = rset.getInt("calendar_id");
                 events.add(event);
             }

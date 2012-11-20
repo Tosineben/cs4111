@@ -15,8 +15,8 @@ import java.io.PrintWriter;
 public class CoursePageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        PrintWriter pw = new PrintWriter(response.getOutputStream());
-        boolean  success = false;
+        PrintWriter pw = response.getWriter();
+        boolean success = false;
 
         Student student = (Student)request.getSession().getAttribute(SessionKeys.logged_in_student);
         Announcement ancmt = new Announcement();

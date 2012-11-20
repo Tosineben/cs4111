@@ -12,7 +12,7 @@ public class Event {
     public Date end;
     public String description;
     public String location;
-    public String course_number;  // TODO: this should not be on here
+    public int course_id;  // TODO: this should not be on here
     public int calendar_id;       // TODO: same with this...
 
     public List<Message> getMessages() {

@@ -23,12 +23,16 @@
     ICourseworksReader rdr = new CourseworksReader();
     List<Course> courses = rdr.getCoursesForStudent(student.uni);
 
+    for(Course course : courses){
+           course.calendars = rdr.getCalendarListForCourse(course.course_id);
+    }
+
 
     List<Event> events = rdr.getEventsForStudent(student.uni);
     List<Announcement> announcements = rdr.getAnnouncementsForStudent(student.uni);
 
-    Collections.sort((List<Announcement>) announcements, new AnnouncementComperator());
-    Collections.sort((List<Event>) events, new EventComperator());
+    Collections.sort(announcements, new AnnouncementComperator());
+    Collections.sort(events, new EventComperator());
 %>
 
 <!DOCTYPE html>
@@ -51,9 +55,15 @@
 
         <div class="row-fluid">
             <div class="span3">
-                <ul class="nav nav-tabs nav-stacked">
-                    <% for(Course course : courses){ %>
-                        <li class= "<%= course.course_number.replaceAll("\\s","") %>"> <a href="#"><%=course.name%></a></li>
+                <ul class="nav nav-list well">
+                    <% for(Course course : courses){
+                        String course_id = Integer.toString(course.course_id);
+                    %>
+
+                        <li class= "nav-header c<%= course_id%>"><%=course.name%></li>
+                        <%for (Calendar cal : course.calendars){%>
+                        <li><a class="cal<%=cal.calendar_id%>" href="#"><%=cal.name%></a></li>
+                        <%}%>
                     <%}%>
                 </ul>
             </div>
@@ -63,8 +73,8 @@
                 <h1>Announcements</h1>
                 <% for(Announcement ancmt : announcements){
                     if(ancmt.time_read == null){%>
-                    <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" data-id="<%= ancmt.anncmnt_id %>" >
-                        <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
+                    <div class="announcement <%=ancmt.course_number.replaceAll("\\s","")%>" >
+                        <div class="announcement-title"><%= ancmt.author %>  <button type="button" class="close anc" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
                         <div class="announcement-content">
                             <p><%= ancmt.message %></p>
                         </div>
@@ -76,31 +86,35 @@
                 <h1>Events</h1>
                 <%
                     List<Message> messages;
-
                     for(Event event : events){
                         messages = rdr.getMessagesForEvent(event.event_id);
                  %>
 
-                    <div class="event <%=event.course_number.replaceAll("\\s","")%> cal<%=event.calendar_id%>" id="<%=event.event_id%>">
-                        <h3><%=event.title%></h3>
-                        <em><%=event.start%> - <%=event.end%></em>
-                        <p><%=event.description%></p>
-                        <div class="message-container">
-                            <%for(Message msg : messages){%>
-                            <div class="message">
-                                <%=msg.message%>
-                            </div>
-
-                            <%}%>
-
-                           <form>
-                               <textarea rows="3"></textarea>
-                               <button class="btn btn-large btn-block" type="button">Add a Comment</button>
-                           </form>
-                        </div>
+                    <div class="event cal<%=event.calendar_id%>">
+                        <a href="#<%=event.event_id%>" role="button" class="btn btn-small .pull-right" data-toggle="modal"><i class="icon-calendar"></i></a>
+                        <h4 class="inline"><%=event.title%></h4> <p><%=event.start%> - <%=event.end%></p>
+                        <p> Location: <%=event.location%></p>
                     </div>
 
-
+                        <!-- Modal -->
+                        <div id="<%=event.event_id%>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                <h3 id="myModalLabel"><%=event.title%></h3>
+                            </div>
+                            <br>
+                            <div class="modal-body">
+                                <p><%=event.description%></p>
+                                <%for(Message msg : messages){%>
+                                <dl class="dl-horizontal">
+                                    <dt><%=msg.author.name%>:</dt>
+                                    <dd><%=msg.message%></dd>
+                                </dl><%}%>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                            </div>
+                        </div>
                 <%}%>
             </div>
           </div>
@@ -120,11 +134,12 @@
     <script type="text/javascript">
         $(document).ready(function(){
 
-            $("li").click(function(){
-             $(".span9 div ." + $(this).attr("class")).fadeToggle();
+            $('.nav.nav-list a').click(function(){
+                var cur = $(this);
+             $('.event.' + cur.attr("class")).fadeToggle("slow", "linear");
             });
 
-            $(".close").click(function(){
+            $(".close.anc").click(function(){
                 var ancmt_id = $(this).data("id");
 
                 $.ajax({
