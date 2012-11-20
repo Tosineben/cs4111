@@ -29,8 +29,7 @@ public class SigninServlet extends HttpServlet {
 
         boolean succeeded = false;
 
-        request.getSession().setAttribute(SessionKeys.logged_in_student, null);
-        request.getSession().setAttribute(SessionKeys.logged_in_prof, null);
+        clearLoggedInSession(request);
 
         if ("professor".equals(req_type)) {
             Professor p = new Professor(){{name=req_name; uni=req_uni;}};
@@ -38,7 +37,7 @@ public class SigninServlet extends HttpServlet {
             succeeded = writer.createProfessor(p);
 
             if (succeeded) {
-                pw.print("/courseworks/coursepage.jsp?prof_uni=" + req_uni);
+                pw.print("/courseworks/profcourses.jsp");
                 request.getSession().setAttribute(SessionKeys.logged_in_prof, p);
             }
         }
@@ -48,7 +47,7 @@ public class SigninServlet extends HttpServlet {
             succeeded = writer.createStudent(s);
 
             if (succeeded) {
-                pw.print("/courseworks/coursepage.jsp?student_uni=" + req_uni);
+                pw.print("/courseworks/coursepage.jsp");
                 request.getSession().setAttribute(SessionKeys.logged_in_student, s);
             }
         }
@@ -67,19 +66,26 @@ public class SigninServlet extends HttpServlet {
 
         PrintWriter pw = new PrintWriter(response.getOutputStream());
 
+        clearLoggedInSession(request);
+
         if ("professor".equals(req_type)) {
-            pw.print("/courseworks/coursepage.jsp?prof_uni=" + req_uni);
+            pw.print("/courseworks/profcourses.jsp");
             request.getSession().setAttribute(SessionKeys.logged_in_prof, new Professor(){{name=req_name; uni=req_uni;}});
         }
         else if ("student".equals(req_type)) {
-            pw.print("/courseworks/coursepage.jsp?student_uni=" + req_uni);
+            pw.print("/courseworks/coursepage.jsp");
             request.getSession().setAttribute(SessionKeys.logged_in_student, new Student(){{name=req_name; uni=req_uni;}});
         }
         else {
-            pw.print("/courseworks/index.jsp");
+            pw.print("/courseworks");
         }
 
         pw.close();
+    }
+
+    private void clearLoggedInSession(HttpServletRequest request) {
+        request.getSession().setAttribute(SessionKeys.logged_in_student, null);
+        request.getSession().setAttribute(SessionKeys.logged_in_prof, null);
     }
 
 }

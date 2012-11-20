@@ -15,6 +15,33 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>AnncmntServlet</servlet-name>
+        <servlet-class>courseworks.profcourses.AnncmntServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AnncmntServlet</servlet-name>
+        <url-pattern>/courseworks/profcourses/anncmnt/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CalendarServlet</servlet-name>
+        <servlet-class>courseworks.profcourses.CalendarServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CalendarServlet</servlet-name>
+        <url-pattern>/courseworks/profcourses/calendar/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EventServlet</servlet-name>
+        <servlet-class>courseworks.profcourses.EventServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EventServlet</servlet-name>
+        <url-pattern>/courseworks/profcourses/event/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>StudentCourseMgmt</servlet-name>
         <servlet-class>courseworks.coursemgmt.StudentServlet</servlet-class>
     </servlet>

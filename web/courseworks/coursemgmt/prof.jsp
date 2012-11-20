@@ -44,9 +44,6 @@
     <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap.min.css" />
     <link type="text/css" rel="stylesheet" href="/styles/bootstrap/bootstrap-responsive.min.css" />
     <link type="text/css" rel="stylesheet" href="/styles/courseworks.css" />
-    <style>
-
-    </style>
 </head>
 <body>
     <jsp:include page="../nav.jsp">

@@ -12,7 +12,7 @@
 
     if (student == null) {
         if (session.getAttribute(SessionKeys.logged_in_prof) != null) {
-            response.sendRedirect("/courseworks/coursemgmt/prof.jsp");
+            response.sendRedirect("/courseworks/profcourses.jsp");
         }
         else {
             response.sendRedirect("/courseworks");
