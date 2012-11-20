@@ -28,8 +28,8 @@
         studentsByCourse.put(c.course_id, rdr.getStudentsForCourse(c.course_id));
     }
 
-    String deleteDisabled = null;
-    String deleteTitle = null;
+    String deleteDisabled = "";
+    String deleteTitle = "";
 
     if (currentCourses.size() > 0) {
         deleteDisabled = "disabled";

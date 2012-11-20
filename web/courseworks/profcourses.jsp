@@ -38,8 +38,8 @@
         }
     }
 
-    String deleteDisabled = null;
-    String deleteTitle = null;
+    String deleteDisabled = "";
+    String deleteTitle = "";
 
     if (currentCourses.size() > 0) {
         deleteDisabled = "disabled";
