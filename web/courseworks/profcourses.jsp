@@ -5,6 +5,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -22,6 +23,8 @@
     SimpleDateFormat anncmntDateFmt = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
     ICourseworksReader rdr = new CourseworksReader();
     Map<Integer, List<Announcement>> anncmntsByCourse = rdr.getAnnouncementsForProf(prof.uni);
+    Map<Integer, Map<Integer, List<Event>>> eventsByCalByCourse = rdr.getEventsForProf(prof.uni);
+    Map<Integer, List<Calendar>> calendarsByCourse = rdr.getCalendarsForProf(prof.uni);
     List<Course> currentCourses = prof.getCourses();
 
     String deleteDisabled = null;
@@ -73,10 +76,66 @@
                     <% } %>
                 </ul>
                 <div class="tab-content">
-                    <% for(Course c : currentCourses) { %>
+                    <% for(Course c : currentCourses) {
+                        if (!calendarsByCourse.containsKey(c.course_id)) {
+                            calendarsByCourse.put(c.course_id, new ArrayList<Calendar>());
+                        }
+                    %>
                         <div class="tab-pane" id="tab-<%=c.course_id%>">
-                            <p>Description: <%=c.description%></p>
-                            <a href="#modal-anncmnts-<%=c.course_id%>" data-toggle="modal">Announcements</a>
+
+                            <div class="pull-right">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="#modal-anncmnts-<%=c.course_id%>" data-toggle="modal">Announcements</a></li>
+                                    <li><a href="#modal-add-calendar-<%=c.course_id%>" data-toggle="modal">Add Calendar</a></li>
+                                </ul>
+                            </div>
+
+                            <% for(Calendar ca : calendarsByCourse.get(c.course_id)) {
+                                if (!eventsByCalByCourse.containsKey(c.course_id)) {
+                                    eventsByCalByCourse.put(c.course_id, new HashMap<Integer, List<Event>>());
+                                }
+                                if (!eventsByCalByCourse.get(c.course_id).containsKey(ca.calendar_id)) {
+                                    eventsByCalByCourse.get(c.course_id).put(ca.calendar_id, new ArrayList<Event>());
+                                }
+                            %>
+
+                                <div class="modal hide fade" id="modal-edit-calendar-<%=ca.calendar_id%>">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3>Edit Calendar for <%=c.course_number%></h3>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="form-horizontal">
+                                        <div class="control-group">
+                                            <label class="control-label" for="edit-calendar-name-<%=ca.calendar_id%>">Name</label>
+                                            <div class="controls">
+                                                <input class="input-xlarge" type="text" id="edit-calendar-name-<%=ca.calendar_id%>" value="<%=ca.name%>">
+                                            </div>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn btn-primary edit-calendar-submit" data-calendarid="<%=ca.calendar_id%>" onclick="return false;">Submit</button>
+                                            <a class="btn btn-danger delete-calendar" style="margin-left:10px;" data-calendarid="<%=ca.calendar_id%>" href="#" onclick="return false"><i class="icon-trash icon-white"></i> Delete Calendar</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                                <div>
+                                    <h3>
+                                        <span id="cal-name-<%=ca.calendar_id%>"><%=ca.name%></span>
+                                        <a href="#modal-edit-calendar-<%=ca.calendar_id%>" data-toggle="modal">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                    </h3>
+
+                                </div>
+
+                                <% for(Event ev : eventsByCalByCourse.get(c.course_id).get(ca.calendar_id)) { %>
+
+                                <% } %>
+
+                            <% } %>
+
                         </div>
                     <% } %>
                 </div>
@@ -88,7 +147,7 @@
                     anncmntsByCourse.put(c.course_id, new ArrayList<Announcement>());
                 }
             %>
-                    <div class="modal hide fade" id="modal-anncmnts-<%=c.course_id%>">
+                <div class="modal hide fade" id="modal-anncmnts-<%=c.course_id%>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h3>Announcements for <%=c.name%> (<%=c.course_number%>)</h3>
@@ -147,6 +206,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal hide fade" id="modal-add-calendar-<%=c.course_id%>">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>New Calendar for <%=c.course_number%></h3>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label" for="add-calendar-name-<%=c.course_id%>">Name</label>
+                                <div class="controls">
+                                    <input class="input-xlarge" type="text" id="add-calendar-name-<%=c.course_id%>">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary add-calendar-submit" data-courseid="<%=c.course_id%>" onclick="return false;">Submit</button>
+                                <button class="btn" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             <% } %>
 
         </div>
@@ -168,6 +247,23 @@
             if (firstTab.length > 0) {
                 firstTab.children('a').click();
             }
+
+            $('.add-calendar-submit').click(function(){
+                var course = $(this).data('courseid');
+                var name = $('#add-calendar-name-' + course).val();
+                addCalendar(course, name);
+            });
+
+            $('.edit-calendar-submit').click(function(){
+                var cal = $(this).data('calendarid');
+                var name = $('#edit-calendar-name-' + cal).val();
+                updateCalendar(cal, name);
+            });
+
+            $('.delete-calendar').click(function(){
+                var cal = $(this).data('calendarid');
+                deleteCalendar(cal);
+            });
 
             $('.edit-anncmnt').click(function(){
                 var anncmnt_id = $(this).parent().data('anncmnt-id');
@@ -222,7 +318,7 @@
                     window.location = window.location;
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('Oops, we failed to add this announcement, please try again');
                 }
             });
         }
@@ -240,7 +336,7 @@
                     row.parent().remove();
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('Oops, we failed to delete this announcement, please try again');
                 }
             });
         }
@@ -343,7 +439,7 @@
                     window.location = window.location;
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('Oops, looks like you have already used that name for a different calendar.');
                 }
             });
         }
@@ -360,7 +456,7 @@
                     window.location = window.location;
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('Oops, we failed to delete this calendar, please try again');
                 }
             });
         }
@@ -371,13 +467,15 @@
                 url: '/courseworks/profcourses/calendar',
                 data: {
                     type: 'update',
+                    calendar_id: calendar_id,
                     name: name
                 },
                 success: function(){
-                    window.location = window.location;
+                    $('#cal-name-' + calendar_id).html(name);
+                    $('#modal-edit-calendar-' + calendar_id).modal('hide')
                 },
                 error: function() {
-                    alert('Oops, we failed to add this course, please try again');
+                    alert('Oops, looks like you have already used that name for a different calendar.');
                 }
             });
         }

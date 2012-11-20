@@ -73,6 +73,10 @@ public final class ReaderQueries {
             GET_CALENDARS +
             "where ca.course_id = :course_id";
 
+    public static final String GET_CALENDARS_FOR_PROF =
+            GET_CALENDARS +
+            "inner join Courses c on c.course_id = ca.course_id " +
+            "where c.uni = :uni";
 
     public static final String GET_MESSAGES =
             "select m.message_id, m.event_id, m.message, m.time_posted, s.uni, s.name " +
@@ -91,6 +95,14 @@ public final class ReaderQueries {
     public static final String GET_DOCUMENTS_FOR_COURSE =
             GET_DOCUMENTS +
             "where d.event_id = :event_id";
+
+    public static final String GET_EVENTS_FOR_PROF =
+            "select ev.title, ev.event_id, ev.startTime as start_time, ev.endTime as end_time, ev.description, " +
+                    "ev.location, c.course_id, cal.calendar_id " +
+                    "from Events ev " +
+                    "inner join Calendars cal on cal.calendar_id = ev.calendar_id " +
+                    "inner join Courses c on c.course_id = cal.course_id " +
+                    "where c.uni = :uni";
 
     public static final String GET_EVENTS_FOR_STUDENT =
             "select ev.title, ev.event_id, ev.startTime as start_time, ev.endTime as end_time, ev.description, " +

@@ -344,6 +344,80 @@ public class CourseworksReader implements ICourseworksReader {
     }
 
     @Override
+    public Map<Integer, List<Calendar>> getCalendarsForProf(String prof_uni) {
+        Map<Integer, List<Calendar>> calsByCourse = new HashMap<Integer, List<Calendar>>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_CALENDARS_FOR_PROF);
+            stmt.setString("uni", prof_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                int course_id = rset.getInt("course_id");
+                if (!calsByCourse.containsKey(course_id)) {
+                    calsByCourse.put(course_id, new ArrayList<Calendar>());
+                }
+                Calendar cal = new Calendar();
+                cal.calendar_id = rset.getInt("calendar_id");
+                cal.name = rset.getString("name");
+                calsByCourse.get(course_id).add(cal);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return calsByCourse;
+    }
+
+    @Override
+    public Map<Integer, Map<Integer, List<Event>>> getEventsForProf(String prof_uni) {
+        Map<Integer, Map<Integer, List<Event>>> eventsByCalByCourse = new HashMap<Integer, Map<Integer, List<Event>>>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_EVENTS_FOR_PROF);
+            stmt.setString("uni", prof_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                int course_id = rset.getInt("course_id");
+                int calendar_id = rset.getInt("calendar_id");
+                if (!eventsByCalByCourse.containsKey(course_id)) {
+                    eventsByCalByCourse.put(course_id, new HashMap<Integer, List<Event>>());
+                }
+                if (!eventsByCalByCourse.get(course_id).containsKey(calendar_id)){
+                    eventsByCalByCourse.get(course_id).put(calendar_id, new ArrayList<Event>());
+                }
+                Event event = new Event();
+                event.event_id = rset.getInt("event_id");
+                event.description = rset.getString("description");
+                event.end = rset.getTimestamp("end_time");
+                event.location = rset.getString("location");
+                event.start = rset.getTimestamp("start_time");
+                event.title = rset.getString("title");
+                eventsByCalByCourse.get(course_id).get(calendar_id).add(event);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return eventsByCalByCourse;
+    }
+
+    @Override
     public List<Message> getMessagesForEvent(int event_id) {
         List<Message> msgs = new ArrayList<Message>();
         Connection conn = null;
