@@ -86,4 +86,13 @@
         <url-pattern>/courseworks/coursepage/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>MessageServlet</servlet-name>
+        <servlet-class>courseworks.MessageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MessageServlet</servlet-name>
+        <url-pattern>/courseworks/message/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
