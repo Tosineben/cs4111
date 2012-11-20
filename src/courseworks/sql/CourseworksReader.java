@@ -599,7 +599,7 @@ public class CourseworksReader implements ICourseworksReader {
                 anncmnt.anncmnt_id = rset.getInt("anncmnt_id");
                 anncmnt.message = rset.getString("message");
                 anncmnt.time_posted = rset.getTimestamp("time_posted");
-                anncmnt.course_number = rset.getString("course_number");
+                anncmnt.course_id = rset.getInt("course_id");
                 anncmnt.author = rset.getString("author");
                 anncmnt.time_read = rset.getTimestamp("time_read");
                 anncmnts.add(anncmnt);

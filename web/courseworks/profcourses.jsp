@@ -69,9 +69,7 @@
                 <ul class="nav nav-tabs">
                     <% for(Course c : currentCourses) { %>
                         <li class="courseTab">
-                            <a href="#tab-<%=c.course_id%>" data-toggle="tab">
-                                <%=c.name%><i class="icon-chevron-right pull-right"></i>
-                            </a>
+                            <a href="#tab-<%=c.course_id%>" data-toggle="tab"><%=c.name%></a>
                         </li>
                     <% } %>
                 </ul>
