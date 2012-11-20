@@ -108,7 +108,7 @@
                                 }
                             %>
 
-                                <div class="prof-calendar" style="padding-top:20px;">
+                                <div class="prof-calendar" style="padding-top:40px;">
 
                                     <h3>
                                         <span id="cal-name-<%=ca.calendar_id%>"><%=ca.name%></span>

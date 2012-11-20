@@ -576,6 +576,75 @@ public class CourseworksReader implements ICourseworksReader {
         return events;
     }
 
+    @Override
+    public Map<Integer, Map<String, Document>> getDocumentsForStudent(String student_uni) {
+        Map<Integer, Map<String, Document>> docsByEvent = new HashMap<Integer, Map<String, Document>>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_DOCUMENTS_FOR_STUDENT);
+            stmt.setString("uni", student_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                int event_id = rset.getInt("event_id");
+                if (!docsByEvent.containsKey(event_id)) {
+                    docsByEvent.put(event_id, new HashMap<String, Document>());
+                }
+                Document doc = new Document();
+                doc.document_id = rset.getInt("document_id");
+                doc.file_path = rset.getString("file_path");
+                docsByEvent.get(event_id).put(doc.file_path, doc);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return docsByEvent;
+    }
+
+    @Override
+    public Map<Integer, List<Message>> getMessagesForStudent(String student_uni) {
+        Map<Integer, List<Message>> msgsByEvent = new HashMap<Integer, List<Message>>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_MESSAGES_FOR_STUDENT);
+            stmt.setString("uni", student_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                int event_id = rset.getInt("event_id");
+                if (!msgsByEvent.containsKey(event_id)) {
+                    msgsByEvent.put(event_id, new ArrayList<Message>());
+                }
+                Message msg = new Message();
+                msg.message = rset.getString("message");
+                msg.message_id = rset.getInt("message_id");
+                msg.time_posted = rset.getTimestamp("time_posted");
+                msg.author = new Student();
+                msg.author.uni = rset.getString("uni");
+                msg.author.name = rset.getString("name");
+                msgsByEvent.get(event_id).add(msg);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return msgsByEvent;
+    }
 
     public List<Event> getUpcomingEventsForStudent(String student_uni) {
         List<Event> events = new ArrayList<Event>();

@@ -84,6 +84,10 @@ public final class ReaderQueries {
             "from Messages m " +
             "inner join Students s on s.uni = m.uni ";
 
+    public static final String GET_MESSAGES_FOR_STUDENT =
+            GET_MESSAGES +
+            "where s.uni = :uni";
+
     public static final String GET_MESSAGES_FOR_EVENT =
             GET_MESSAGES +
             "where m.event_id = :event_id";
@@ -92,6 +96,13 @@ public final class ReaderQueries {
     public static final String GET_DOCUMENTS =
             "select d.document_id, d.file_path, d.event_id " +
             "from Documents d ";
+
+    public static final String GET_DOCUMENTS_FOR_STUDENT =
+            GET_DOCUMENTS +
+            "inner join Events ev on ev.event_id = d.event_id " +
+            "inner join Calendars ca on ca.calendar_id = ev.calendar_id " +
+            "inner join Enrollment e on e.course_id = ca.course_id " +
+            "where e.uni = :uni";
 
     public static final String GET_DOCUMENTS_FOR_COURSE =
             GET_DOCUMENTS +

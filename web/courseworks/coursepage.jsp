@@ -1,10 +1,10 @@
 <%@ page import="courseworks.sql.*" %>
 <%@ page import="courseworks.model.*" %>
 <%@ page import="courseworks.model.comperators.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.Collections" %>
 <%@ page import="courseworks.SessionKeys" %>
-<%@ page import="java.util.Map" %>
+<%@ page import="java.util.*" %>
+<%@ page import="courseworks.model.Calendar" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -28,6 +28,9 @@
            course.calendars = rdr.getCalendarListForCourse(course.course_id);
     }
 
+    SimpleDateFormat dateFmt = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+    Map<Integer, Map<String, Document>> docsByEvent = rdr.getDocumentsForStudent(student.uni);
+    Map<Integer, List<Message>> msgsByEvent = rdr.getMessagesForStudent(student.uni);
 
     List<Event> events = rdr.getEventsForStudent(student.uni);
     List<Announcement> announcements = rdr.getAnnouncementsForStudent(student.uni);
@@ -89,13 +92,13 @@
                     List<Message> messages;
                     Map<String, Document> documents;
                     for(Event event : events){
-                        messages = rdr.getMessagesForEvent(event.event_id);
-                        documents = rdr.getDocumentsForEvent(event.event_id);
+                        messages = msgsByEvent.containsKey(event.event_id) ? msgsByEvent.get(event.event_id) : new ArrayList<Message>();
+                        documents = docsByEvent.containsKey(event.event_id) ? docsByEvent.get(event.event_id) : new HashMap<String, Document>();
                  %>
 
                     <div class="event cal<%=event.calendar_id%>">
                         <a href="#<%=event.event_id%>" role="button" class="btn btn-small calbtn" data-toggle="modal"><i class="icon-calendar"></i></a>
-                        <h4 class="inline"><%=event.title%></h4> <p><%=event.start%> - <%=event.end%></p>
+                        <h4 class="inline"><%=event.title%></h4> <p><%=dateFmt.format(event.start)%> - <%=dateFmt.format(event.end)%></p>
                         <p> Location: <%=event.location%></p>
                     </div>
 
@@ -110,7 +113,7 @@
                                 <p><%=event.description%></p>
                                 <br>
 
-                                <p><strong>Time: </strong> <%=event.start%> to <%=event.end%> </p>
+                                <p><strong>Time: </strong> <%=dateFmt.format(event.start)%> to <%=dateFmt.format(event.end)%> </p>
                                 <p><strong>Location:</strong> <%=event.location%></p>
                                 <br>
 
