@@ -38,8 +38,8 @@
 
     Collections.sort(announcements, new AnnouncementComperator());
     Collections.sort(events, new EventComperator());
-    Map<Integer, String> course_id_to_name = new HashMap<Integer, String>();
-    Map<Integer, String> cal_id_to_name = new HashMap<Integer, String>();
+    Map<Integer, Course> course_id_to_course = new HashMap<Integer, Course>();
+    Map<Integer, Calendar> cal_id_to_cal = new HashMap<Integer, Calendar>();
 %>
 
 <!DOCTYPE html>
@@ -63,13 +63,13 @@
             <div class="span3">
                 <ul class="nav nav-list well">
                     <% for(Course course : courses){
-                        course_id_to_name.put(course.course_id, course.name);
+                        course_id_to_course.put(course.course_id, course);
                     %>
 
                         <li class= "nav-header c<%= course.course_id%> <%= course.course_number.replaceAll("\\s","")%>"><%=course.name%></li>
                         <%for (Calendar cal : course.calendars){
-                        cal_id_to_name.put(cal.calendar_id, cal.name);%>
-                        <li class="active"><a class="cal<%=cal.calendar_id%>" href="#"><%=cal.name%></a></li>
+                        cal_id_to_cal.put(cal.calendar_id, cal);%>
+                        <li class="active"><a class="cal<%=cal.calendar_id%>"><%=cal.name%></a></li>
                         <%}%>
                     <%}%>
                 </ul>
@@ -81,7 +81,7 @@
                 <% for(Announcement ancmt : announcements){
                     if(ancmt.time_read == null){%>
                     <div class="announcement c<%=ancmt.course_id%>" >
-                        <div class="announcement-title"> <%=course_id_to_name.get(ancmt.course_id)%>: <%= ancmt.author %>  <button type="button" class="close anc" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
+                        <div class="announcement-title"> <%=course_id_to_course.get(ancmt.course_id).course_number%>: <%= ancmt.author %>  <button type="button" class="close anc" data-id="<%= ancmt.anncmnt_id %>">×</button></div>
                         <div class="announcement-content">
                             <p><%= ancmt.message %></p>
                         </div>
@@ -101,7 +101,9 @@
 
                     <div class="event cal<%=event.calendar_id%>">
                         <a href="#<%=event.event_id%>" role="button" class="btn btn-small calbtn" data-toggle="modal"><i class="icon-calendar"></i></a>
+                        <h4><%=course_id_to_course.get(event.course_id).course_number%>: <%=cal_id_to_cal.get(event.calendar_id).name%></h4>
                         <h4 class="inline"><%=event.title%></h4> <p><%=dateFmt.format(event.start)%> - <%=dateFmt.format(event.end)%></p>
+
                         <p> Location: <%=event.location%></p>
                     </div>
 
