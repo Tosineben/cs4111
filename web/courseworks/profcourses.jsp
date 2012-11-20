@@ -23,6 +23,7 @@
     SimpleDateFormat anncmntDateFmt = new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
     ICourseworksReader rdr = new CourseworksReader();
     Map<Integer, List<Announcement>> anncmntsByCourse = rdr.getAnnouncementsForProf(prof.uni);
+    Map<Integer, List<Document>> documentsByEvent = rdr.getDocumentsForProf(prof.uni);
     Map<Integer, Map<Integer, List<Event>>> eventsByCalByCourse = rdr.getEventsForProf(prof.uni);
     Map<Integer, List<Calendar>> calendarsByCourse = rdr.getCalendarsForProf(prof.uni);
     List<Course> currentCourses = prof.getCourses();
@@ -123,7 +124,8 @@
                                                     <th style="min-width:200px;">Title</th>
                                                     <th style="min-width:200px;">Start</th>
                                                     <th style="min-width:200px;">End</th>
-                                                    <th style="min-width:200px;">Location</th>
+                                                    <th style="min-width:180px;">Location</th>
+                                                    <th style="min-width:50px;">Docs</th>
                                                     <th style="min-width:50px;">Edit</th>
                                                 </tr>
                                             </thead>
@@ -134,6 +136,11 @@
                                                 <td><%=anncmntDateFmt.format(ev.start)%></td>
                                                 <td><%=anncmntDateFmt.format(ev.end)%></td>
                                                 <td><%=ev.location%></td>
+                                                <td>
+                                                    <a href="#modal-documents-<%=ev.event_id%>" data-toggle="modal">
+                                                        <i class="icon-file"></i>
+                                                    </a>
+                                                </td>
                                                 <td>
                                                     <a href="#modal-event-<%=ev.event_id%>" data-toggle="modal">
                                                         <i class="icon-pencil"></i>
@@ -201,7 +208,7 @@
                                 <div class="modal hide fade" id="modal-edit-calendar-<%=ca.calendar_id%>">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h3>Edit Calendar for <%=c.course_number%></h3>
+                                        <h3>Edit Calendar</h3>
                                     </div>
                                     <div class="modal-body">
                                         <form class="form-horizontal">
@@ -226,7 +233,12 @@
                 </div>
             </div>
 
-            <% for(Event ev : events) { %>
+            <%
+            for(Event ev : events) {
+                if (!documentsByEvent.containsKey(ev.event_id)) {
+                    documentsByEvent.put(ev.event_id, new ArrayList<Document>());
+                }
+            %>
 
                 <div class="modal hide fade" id="modal-event-<%=ev.event_id%>">
                     <div class="modal-header">
@@ -273,6 +285,53 @@
                     </div>
                 </div>
 
+                <div class="modal hide fade" id="modal-documents-<%=ev.event_id%>">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>Documents for <%=ev.title%></h3>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th style="min-width:200px;">File Path</th>
+                                <th style="min-width:50px;">Edit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% for (Document d: documentsByEvent.get(ev.event_id)) { %>
+                            <tr id="document-row-<%=d.document_id%>">
+                                <td><%=d.file_path%></td>
+                                <td>
+                                    <a href="#" onclick="return false;" class="delete-document" data-documentid="<%=d.document_id%>">
+                                        <i class="icon-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% } %>
+                            </tbody>
+                            <tr style="display:none;" id="add-document-<%=ev.event_id%>">
+                                <td>
+                                    <input id="add-document-filepath-<%=ev.event_id%>" type="text" />
+                                </td>
+                                <td>
+                                    <a href="#" onclick="return false;" class="add-document-ok" data-eventid="<%=ev.event_id%>">
+                                        <i class="icon-check"></i>
+                                    </a>
+                                    <a href="#" onclick="return false;" class="add-document-cancel">
+                                        <i class="icon-ban-circle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div>
+                            <a href="#" onclick="return false;" class="add-document" data-eventid="<%=ev.event_id%>">
+                                Add New Document
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             <% } %>
 
             <%
@@ -281,10 +340,11 @@
                     anncmntsByCourse.put(c.course_id, new ArrayList<Announcement>());
                 }
             %>
+
                 <div class="modal hide fade" id="modal-anncmnts-<%=c.course_id%>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h3>Announcements for <%=c.name%> (<%=c.course_number%>)</h3>
+                        <h3>Announcements for <%=c.course_number%></h3>
                     </div>
                     <div class="modal-body">
                         <table class="table">
@@ -339,6 +399,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal hide fade" id="modal-add-calendar-<%=c.course_id%>">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -359,6 +420,7 @@
                         </form>
                     </div>
                 </div>
+
             <% } %>
 
         </div>
@@ -371,279 +433,5 @@
 <script type="text/javascript" src="/scripts/jquery-1.8.1.js"></script>
 <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
 <script type="text/javascript" src="/scripts/navigation.js"></script>
-<script type="text/javascript">
-    (function(){
-
-        $(function(){
-            var firstTab = $($('.courseTab')[0]);
-            if (firstTab.length > 0) {
-                firstTab.children('a').click();
-            }
-
-            $('.edit-event-submit').click(function(){
-                var event_id = $(this).data('eventid');
-                var title = $('#edit-event-title-' + event_id).val();
-                var start = $('#edit-event-start-' + event_id).val();
-                var end = $('#edit-event-end-' + event_id).val();
-                var location = $('#edit-event-location-' + event_id).val();
-                var desc = $('#edit-event-desc-' + event_id).val();
-                updateEvent(event_id, title, start, end, desc, location);
-            });
-
-            $('.add-event-submit').click(function() {
-                var calendar_id = $(this).data('calendarid');
-                var title = $('#add-event-title-' + calendar_id).val();
-                var start = $('#add-event-start-' + calendar_id).val();
-                var end = $('#add-event-end-' + calendar_id).val();
-                var location = $('#add-event-location-' + calendar_id).val();
-                var desc = $('#add-event-desc-' + calendar_id).val();
-                addEvent(calendar_id, title, start, end, desc, location);
-            });
-
-            $('.delete-event').click(function(){
-                var event_id = $(this).data('eventid');
-                deleteEvent(event_id);
-            });
-
-            $('#show-future-events').click(function () {
-                $($(this).data('target')).toggle('slow');
-            });
-
-            $('#show-past-events').click(function () {
-                $($(this).data('target')).toggle('slow');
-            });
-
-            $('.add-calendar-submit').click(function(){
-                var course = $(this).data('courseid');
-                var name = $('#add-calendar-name-' + course).val();
-                addCalendar(course, name);
-            });
-
-            $('.edit-calendar-submit').click(function(){
-                var cal = $(this).data('calendarid');
-                var name = $('#edit-calendar-name-' + cal).val();
-                updateCalendar(cal, name);
-            });
-
-            $('.delete-calendar').click(function(){
-                var cal = $(this).data('calendarid');
-                deleteCalendar(cal);
-            });
-
-            $('.edit-anncmnt').click(function(){
-                var anncmnt_id = $(this).parent().data('anncmnt-id');
-                $("#anncmnt-msg-new-" + anncmnt_id).show();
-                $("#anncmnt-msg-old-" + anncmnt_id).hide();
-                $(this).hide();
-                $(this).parent().children('.delete-anncmnt').hide();
-                $(this).parent().children('.edit-anncmnt-ok').show();
-            });
-
-            $('.edit-anncmnt-ok').click(function(){
-                var anncmnt_id = $(this).parent().data('anncmnt-id');
-                var msg = $("#anncmnt-msg-new-" + anncmnt_id).val();
-                updateAnnouncement(anncmnt_id, msg);
-            })
-
-            $('.delete-anncmnt').click(function(){
-                if (confirm('Are you sure you want to delete this announcement?')) {
-                    deleteAnnouncement($(this).parent().data('anncmnt-id'));
-                }
-            })
-
-            $('.add-anncmnt').click(function(){
-                var course_id = $(this).data('course-id');
-                $('#add-anncmnt-' + course_id).show();
-            });
-
-            $('.add-anncmnt-ok').click(function(){
-                var course_id = $(this).data('course-id');
-                var msg = $("#anncmnt-add-msg-" + course_id).val();
-                addAnnouncment(course_id, msg);
-            });
-
-            $('.add-anncmnt-cancel').click(function(){
-                $(this).parent().parent().hide();
-            });
-
-        });
-
-        function addAnnouncment(course_id, message) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/anncmnt',
-                data: {
-                    type: 'add',
-                    course_id: course_id,
-                    message: message
-                },
-                success: function(){
-                    window.location = window.location;
-                },
-                error: function() {
-                    alert('Oops, we failed to add this announcement, please try again');
-                }
-            });
-        }
-
-        function deleteAnnouncement(anncmnt_id) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/anncmnt',
-                data: {
-                    type: 'delete',
-                    anncmnt_id: anncmnt_id
-                },
-                success: function(){
-                    var row = $('td[data-anncmnt-id="'+anncmnt_id+'"]');
-                    row.parent().remove();
-                },
-                error: function() {
-                    alert('Oops, we failed to delete this announcement, please try again');
-                }
-            });
-        }
-
-        function updateAnnouncement(anncmnt_id, message) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/anncmnt',
-                data: {
-                    type: 'update',
-                    anncmnt_id: anncmnt_id,
-                    message: message
-                },
-                success: function() {
-                    $("#anncmnt-msg-new-" + anncmnt_id).hide();
-                    $("#anncmnt-msg-old-" + anncmnt_id).show();
-                    $("#anncmnt-msg-old-" + anncmnt_id).text(message);
-                    var row = $('td[data-anncmnt-id="'+anncmnt_id+'"]');
-                    row.children('.delete-anncmnt').show();
-                    row.children('.edit-anncmnt').show();
-                    row.children('.edit-anncmnt-ok').hide();
-                },
-                error: function() {
-                    alert('Oops, we failed to update this announcement, please try again');
-                }
-            });
-        }
-
-        function addEvent(calendar_id, title, start, end, description, location) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/event',
-                data: {
-                    type: 'add',
-                    calendar_id: calendar_id,
-                    title: title,
-                    start: start,
-                    end: end,
-                    description: description,
-                    location: location
-                },
-                success: function(){
-                    window.location = window.location;
-                },
-                error: function() {
-                    alert('We were unable to save this event. Please enter dates in the format 12/25/2012 11:45 am.');
-                }
-            });
-        }
-
-        function deleteEvent(event_id) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/event',
-                data: {
-                    type: 'delete',
-                    event_id: event_id
-                },
-                success: function(){
-                    $('#event-row-' + event_id).remove();
-                    window.location = window.location;
-                },
-                error: function() {
-                    alert('Oops, we could not delete this event, please try again');
-                }
-            });
-        }
-
-        function updateEvent(event_id, title, start, end, description, location) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/event',
-                data: {
-                    type: 'update',
-                    event_id: event_id,
-                    title: title,
-                    start: start,
-                    end: end,
-                    description: description,
-                    location: location
-                },
-                success: function(){
-                    window.location = window.location;
-                },
-                error: function() {
-                    alert('We were unable to save this event. Please enter dates in the format 12/25/2012 11:45 am.');
-                }
-            });
-        }
-
-        function addCalendar(course_id, name) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/calendar',
-                data: {
-                    type: 'add',
-                    course_id: course_id,
-                    name: name
-                },
-                success: function(){
-                    window.location = window.location;
-                },
-                error: function() {
-                    alert('Oops, looks like you have already used that name for a different calendar.');
-                }
-            });
-        }
-
-        function deleteCalendar(calendar_id) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/calendar',
-                data: {
-                    type: 'delete',
-                    calendar_id: calendar_id
-                },
-                success: function(){
-                    window.location = window.location;
-                },
-                error: function() {
-                    alert('Oops, we failed to delete this calendar, please try again');
-                }
-            });
-        }
-
-        function updateCalendar(calendar_id, name) {
-            $.ajax({
-                type: 'POST',
-                url: '/courseworks/profcourses/calendar',
-                data: {
-                    type: 'update',
-                    calendar_id: calendar_id,
-                    name: name
-                },
-                success: function(){
-                    $('#cal-name-' + calendar_id).html(name);
-                    $('#modal-edit-calendar-' + calendar_id).modal('hide')
-                },
-                error: function() {
-                    alert('Oops, looks like you have already used that name for a different calendar.');
-                }
-            });
-        }
-
-    })();
-</script>
+<script type="text/javascript" src="/scripts/profcourses.js"></script>
 </html>

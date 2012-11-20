@@ -32,9 +32,6 @@ public interface ICourseworksReader {
     // returns announcements for course
     List<Announcement> getAnnouncementsForCourse(int course_id);
 
-    // returns announcements for professor
-    Map<Integer, List<Announcement>> getAnnouncementsForProf(String prof_uni);
-
     // returns student+time_read for students that have read announcement
     List<ReadAnnouncment> getStudentsReadForAnnouncment(int anncmnt_id);
 
@@ -46,6 +43,9 @@ public interface ICourseworksReader {
 
     Map<Integer, List<Calendar>> getCalendarsForProf(String prof_uni);
     Map<Integer, Map<Integer, List<Event>>> getEventsForProf(String prof_uni);
+    HashMap<Integer, HashMap<String, Integer>> getMessageCountByStudentByCourse(String prof_uni);
+    Map<Integer, List<Announcement>> getAnnouncementsForProf(String prof_uni);
+    Map<Integer, List<Document>> getDocumentsForProf(String prof_uni);
 
     // returns messages for event
     List<Message> getMessagesForEvent(int event_id);
@@ -57,5 +57,4 @@ public interface ICourseworksReader {
 
     List<Announcement> getAnnouncementsForStudent(String student_uni);
 
-    HashMap<Integer, HashMap<String, Integer>> getMessageCountByStudentByCourse(String prof_uni);
 }

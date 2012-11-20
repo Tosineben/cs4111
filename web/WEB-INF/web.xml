@@ -24,6 +24,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>DocumentServlet</servlet-name>
+        <servlet-class>courseworks.profcourses.DocumentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DocumentServlet</servlet-name>
+        <url-pattern>/courseworks/profcourses/document/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>CalendarServlet</servlet-name>
         <servlet-class>courseworks.profcourses.CalendarServlet</servlet-class>
     </servlet>

@@ -251,6 +251,39 @@ public class CourseworksReader implements ICourseworksReader {
     }
 
     @Override
+    public Map<Integer, List<Document>> getDocumentsForProf(String prof_uni) {
+        Map<Integer, List<Document>> docsByEvent = new HashMap<Integer, List<Document>>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_DOCUMENTS_FOR_PROF);
+            stmt.setString("uni", prof_uni);
+            rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                int event_id = rset.getInt("event_id");
+                if (!docsByEvent.containsKey(event_id)) {
+                    docsByEvent.put(event_id, new ArrayList<Document>());
+                }
+                Document doc = new Document();
+                doc.document_id = rset.getInt("document_id");
+                doc.file_path = rset.getString("file_path");
+                docsByEvent.get(event_id).add(doc);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return docsByEvent;
+    }
+
+    @Override
     public List<ReadAnnouncment> getStudentsReadForAnnouncment(int anncmnt_id) {
         List<ReadAnnouncment> ras = new ArrayList<ReadAnnouncment>();
         Connection conn = null;

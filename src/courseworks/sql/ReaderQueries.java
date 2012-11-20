@@ -96,6 +96,13 @@ public final class ReaderQueries {
             GET_DOCUMENTS +
             "where d.event_id = :event_id";
 
+    public static final String GET_DOCUMENTS_FOR_PROF =
+            GET_DOCUMENTS +
+            "inner join Events ev on ev.event_id = d.event_id " +
+            "inner join Calendars cal on cal.calendar_id = ev.calendar_id " +
+            "inner join Courses c on c.course_id = cal.course_id " +
+            "where c.uni = :uni ";
+
     public static final String GET_EVENTS_FOR_PROF =
             "select ev.title, ev.event_id, ev.startTime as start_time, ev.endTime as end_time, ev.description, " +
                     "ev.location, c.course_id, cal.calendar_id " +
