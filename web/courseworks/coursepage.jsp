@@ -69,7 +69,7 @@
                         <li class= "nav-header c<%= course.course_id%> <%= course.course_number.replaceAll("\\s","")%>"><%=course.name%></li>
                         <%for (Calendar cal : course.calendars){
                         cal_id_to_cal.put(cal.calendar_id, cal);%>
-                        <li class="active"><a class="cal<%=cal.calendar_id%>"><%=cal.name%></a></li>
+                        <li class="active"><a class="cal<%=cal.calendar_id%>" href="#"><%=cal.name%></a></li>
                         <%}%>
                     <%}%>
                 </ul>
@@ -86,7 +86,15 @@
                             <p><%= ancmt.message %></p>
                         </div>
                     </div>
+                <%}else{%>
+                <div class="announcement old hidden c<%=ancmt.course_id%>" >
+                    <div class="announcement-title"> <%=course_id_to_course.get(ancmt.course_id).course_number%>: <%= ancmt.author %></div>
+                    <div class="announcement-content">
+                        <p><%= ancmt.message %></p>
+                    </div>
+                </div>
                 <%}}%>
+                <button class="btn btn-large btn-block" id="ancmt-toggle" type="button">Toggle Read Announcements</button>
             </div>
 
             <div id="Calendar" style="padding-top:40px;">
@@ -198,13 +206,18 @@
                         type: 'read'
                     },
                     success: function(){
-                        anc.parent().parent().hide();
+                        anc.parent().parent().toggleClass("old hidden");
                     },
                     error: function(){
                         alert('Sorry, we couldn\'t mark it read')
                     }
                 });
-});
+            });
+
+            $("#ancmt-toggle").click(function(){
+                $(".announcement.old").toggleClass("hidden");
+            });
+
         });
 
     </script>
