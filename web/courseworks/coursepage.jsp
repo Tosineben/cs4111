@@ -91,7 +91,7 @@
                  %>
 
                     <div class="event cal<%=event.calendar_id%>">
-                        <a href="#<%=event.event_id%>" role="button" class="btn btn-small .pull-right" data-toggle="modal"><i class="icon-calendar"></i></a>
+                        <a href="#<%=event.event_id%>" role="button" class="btn btn-small calbtn" data-toggle="modal"><i class="icon-calendar"></i></a>
                         <h4 class="inline"><%=event.title%></h4> <p><%=event.start%> - <%=event.end%></p>
                         <p> Location: <%=event.location%></p>
                     </div>
@@ -110,6 +110,11 @@
                                     <dt><%=msg.author.name%>:</dt>
                                     <dd><%=msg.message%></dd>
                                 </dl><%}%>
+                                <form method="post" action="/courseworks/coursepage" enctype="addMessage" ur>
+                                    <textarea class="input-block-level" rows="3"></textarea>
+                                    <button type="submit" class="btn btn-block">Add a Comment</button>
+                                </form>
+
                             </div>
                             <div class="modal-footer">
                                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -139,6 +144,8 @@
              $('.event.' + cur.attr("class")).fadeToggle("slow", "linear");
             });
 
+
+
             $(".close.anc").click(function(){
                 var ancmt_id = $(this).data("id");
 
@@ -147,7 +154,7 @@
                     url: '/courseworks/coursepage',
                     data: {
                         announcement_id: ancmt_id,
-                        action: 'read'
+                        type: 'read'
                     },
                     success: function(){
                         $(this).parent().parent().hide();

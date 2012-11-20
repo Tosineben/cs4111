@@ -5,6 +5,7 @@ import courseworks.model.Calendar;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class CourseworksReader implements ICourseworksReader {
 
@@ -410,6 +411,46 @@ public class CourseworksReader implements ICourseworksReader {
 
                 System.out.print(stmt);
                 rset = stmt.executeQuery();
+
+            while (rset.next()) {
+                Event event = new Event();
+                event.event_id = rset.getInt("event_id");
+                event.description = rset.getString("description");
+                event.end = rset.getDate("end_time");
+                event.location = rset.getString("location");
+                event.start = rset.getDate("start_time");
+                event.title = rset.getString("title");
+                event.course_id = rset.getInt("course_id");
+                event.calendar_id = rset.getInt("calendar_id");
+                events.add(event);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            _helper.tryClose(rset, conn);
+        }
+
+        return events;
+    }
+
+
+    public List<Event> getUpcomingEventsForStudent(String student_uni) {
+        List<Event> events = new ArrayList<Event>();
+        Connection conn = null;
+        ResultSet rset = null;
+
+        Date time_now = new Date();
+
+        try {
+            conn = _helper.getConnection();
+            CallableStatement stmt = conn.prepareCall(ReaderQueries.GET_UPCOMING_EVENTS_FOR_STUDENT);
+            stmt.setString("student_uni", student_uni);
+            stmt.setDate("current_time", (java.sql.Date) time_now);
+
+            System.out.print(stmt);
+            rset = stmt.executeQuery();
 
             while (rset.next()) {
                 Event event = new Event();

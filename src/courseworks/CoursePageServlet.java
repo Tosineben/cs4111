@@ -19,15 +19,17 @@ public class CoursePageServlet extends HttpServlet {
         boolean success = false;
 
         Student student = (Student)request.getSession().getAttribute(SessionKeys.logged_in_student);
-        Announcement ancmt = new Announcement();
-        ancmt.anncmnt_id = Integer.parseInt(request.getParameter("announcement_id"));
-
-        String action = request.getParameter("action");
+        String type = request.getParameter("type");
 
         if(student != null){
-            if("read".equals(action)){
+            if("read".equals(type)){
+                Announcement ancmt = new Announcement();
+                ancmt.anncmnt_id = Integer.parseInt(request.getParameter("announcement_id"));
                 success = ancmt.updateAnncmntRead(student.uni, true);
 
+            }
+            if("addMessage".equals(type)){
+                pw.write(5);
             }
 
         }

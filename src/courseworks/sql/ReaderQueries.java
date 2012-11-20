@@ -97,6 +97,13 @@ public final class ReaderQueries {
                     "inner join Courses c on c.course_id = e.course_id " +
             "where e.uni = :student_uni ";
 
+    public static final String GET_UPCOMING_EVENTS_FOR_STUDENT =
+            GET_EVENTS_FOR_STUDENT +
+                    "and ev.startTime > :current_time";
+
+
+
+
     public static final String GET_MESSAGES_BY_STUDENT_COURSE_FOR_PROF =
             "SELECT S.uni, C.course_id, COUNT(M.message_id) AS num_messages " +
             "FROM Students S " +
