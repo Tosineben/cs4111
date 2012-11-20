@@ -207,6 +207,7 @@
                     },
                     success: function(){
                         anc.parent().parent().toggleClass("old hidden");
+                        anc.remove();
                     },
                     error: function(){
                         alert('Sorry, we couldn\'t mark it read')
